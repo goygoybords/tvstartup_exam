@@ -1,25 +1,37 @@
-{% extends 'layouts/index.html' %}
+{% extends "accounts/base_account.html" %}
 
-{% block title %}Home{% endblock title%}
+{% block head_title %}Sign In{% endblock head_title %}
 
 {% block content %}
-<div class="container"> 
-    <h2>Login</h2>  
-    <form method="post" action="{% url 'login' %}"> 
-        {% csrf_token %} 
-        <input type="hidden" name="next" value="{{ next }}"> 
+    <h1>Sign in</h1>
+        <p>
+            If you have not created an account yet, then please <a href="{% url 'register' %}">sign up</a> first.
+        </p>
+        <form class="login" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}"> 
+            <div id="div_id_login" class="form-group">
+                <label for="id_login" class=" requiredField">Username<span class="asteriskField">*</span></label>
+                <div> 
+                    <input type="text" name="username" placeholder="Username" autocomplete="username" maxlength="150" class="textinput form-control" required="" id="id_login"> 
+                </div> 
+            </div> 
+            <div id="div_id_password" class="form-group">
+                <label for="id_password" class=" requiredField">Password<span class="asteriskField">*</span></label> 
+                <div>
+                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="passwordinput form-control" required="" aria-describedby="id_password_helptext" id="id_password">
+                    <small id="hint_id_password" class="form-text text-muted">
+                        <a href="">Forgot your password?</a>
+                    </small>
+                </div>
+            </div>
+            <div class="form-group"> 
+                <div id="div_id_remember" class="form-check"> 
+                    <input type="checkbox" name="remember" class="checkboxinput form-check-input" id="id_remember">
+                    <label for="id_remember" class="form-check-label">Remember Me</label>
+                </div>
+            </div>
+            <button class="primaryAction btn btn-outline-info btn-block" type="submit">Sign In</button>
+        </form>
 
-        <div class="form-group"> 
-            <label for="username">Username:</label>  
-            <input type="text" name="username" id="username" required> 
-        </div>
-        <div class="form-group"> 
-            <label for="password">Password:</label>  
-            <input type="password" name="password" id="password" required>  
-        </div>
-        <button type="submit">Login</button>  
-    </form>
-
-    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>  
-</div>
 {% endblock content %}
