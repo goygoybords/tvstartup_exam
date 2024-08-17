@@ -1,9 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse
-# from django.views.generic.detail import DetailView
-# from django.views.generic.list import ListView
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from .models import Video, Comments
-# from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .forms import VideoUploadForm, CommentForm
 
@@ -11,6 +8,20 @@ from .forms import VideoUploadForm, CommentForm
 def index(request):
     videos = Video.objects.all()
     return render(request, 'layouts/home.html', {'videos': videos})
+
+def search_video(request):
+    searched_data = request.GET.get("q")
+
+    videos = Video.objects.filter(
+        Q(title__icontains=searched_data) |
+        Q(description__icontains=searched_data) |
+        Q(uploader__username__icontains=searched_data)
+    )
+
+    context = {
+        "videos": videos
+    }
+    return render(request, 'layouts/search_videos.html', context)
     
 @login_required(login_url='/account/', redirect_field_name='redirect_to')
 def upload_video(request):
@@ -52,6 +63,8 @@ def delete_video(request, video_id):
         return redirect(reverse('home'))
     
     return render(request, 'layouts/delete_video.html', {'video': video})
+
+
 
 
 

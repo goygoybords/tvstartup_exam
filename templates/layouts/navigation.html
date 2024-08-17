@@ -5,7 +5,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="navbar-search" method="GET" action="">
+        <form class="navbar-search" method="GET" action="{% url 'search_video' %}">
             <input class="navbar-search-input" name="q" type="text" placeholder="Search" aria-label="Search" value={{ request.GET.q }}>
             <button type="submit" class="navbar-search-button"><ion-icon name="search-outline"></ion-icon></button>
         </form>
