@@ -9,7 +9,12 @@
         </p>
         <form class="login" method="POST" action="{% url 'login' %}">
             {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}"> 
+            <input type="hidden" name="next" value="{{ next }}">
+            {% if error %}
+                <div class="alert alert-block alert-danger">
+                    <ul class="m-0"><li>{{ error }}</li></ul>
+                </div>
+            {% endif %}
             <div id="div_id_login" class="form-group">
                 <label for="id_login" class=" requiredField">Username<span class="asteriskField">*</span></label>
                 <div> 

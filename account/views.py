@@ -30,7 +30,7 @@ def register_process(request):
 
 
 def login_process(request):
-    error_message = None 
+    error_message = None
     if request.method == "POST":  
         username = request.POST.get("username")  
         password = request.POST.get("password")  
@@ -40,7 +40,7 @@ def login_process(request):
             next_url = request.POST.get('next') or request.GET.get('next') or 'home'  
             return redirect(next_url) 
         else:
-            error_message = "Invalid credentials"  
+            error_message = "The username and/or password you specified are not correct."  
     return render(request, 'accounts/login.html', {'error': error_message})
 
     

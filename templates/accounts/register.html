@@ -1,19 +1,69 @@
-{% extends 'layouts/index.html' %}
+{% extends "accounts/base_account.html" %}
 
-{% block title %}Register{% endblock title%}
+{% block head_title %}Sign In{% endblock head_title %}
 
 {% block content %}
-    <div class="container"> 
-        <h2>Register</h2>  
-        <form method="POST" action="{% url 'register' %}">
-            {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit">Register</button>
-        </form>
-        {% if error %}  
-            <p class="error">{{ error }}</p>  
+    <h1>Sign Up</h1>
+    <p>Already have an account? Then please <a href="{% url 'login' %}">sign in.</a></p> 
+    <form class="signup" id="signup_form" method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+    
+        {% if form.non_field_errors %}
+            <div class="alert alert-block alert-danger">
+               {{ form.non_field_errors }}
+            </div>
         {% endif %}
-    </div>
-    <p>Already have an account? <a href="{% url 'login' %}">Login Here</a></p>  
+
+        <div class="form-group">
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="alert alert-danger">
+                    {{ form.first_name.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="alert alert-danger">
+                    {{ form.last_name.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="alert alert-danger">
+                    {{ form.username.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="alert alert-danger">
+                    {{ form.password.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password_confirm.label_tag }}
+            {{ form.password_confirm }}
+            {% if form.password_confirm.errors %}
+                <div class="alert alert-danger">
+                    {{ form.password_confirm.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <button class="btn btn-outline-info btn-block" type="submit">Sign Up</button>
+    </form>
+
 {% endblock content %}
-</div>
