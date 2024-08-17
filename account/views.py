@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from main.models import Video
-from .forms import RegisterForm
+from .forms import RegisterForm, EditProfileForm
 
 def register_process(request):
     if request.method == "POST":
@@ -58,6 +59,13 @@ def view_profile(request):
 @login_required(login_url='/account/', redirect_field_name='redirect_to')
 def edit_profile(request, user):
     profile = get_object_or_404(User, username=user)
-   
-    return render(request, 'layouts/edit_profile.html', {'profile': profile})
-    
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=profile)  # Use the correct form class here
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been successfully updated.')
+            return redirect('edit_profile', user=profile.username)  # Redirect to the profile page
+    else:
+        form = EditProfileForm(instance=profile)  # Use the correct form class here
+
+    return render(request, 'layouts/edit_profile.html', {'form': form, 'profile': profile})
