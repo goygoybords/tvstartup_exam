@@ -1,0 +1,27 @@
+{% extends 'layouts/index.html' %}
+
+{% block title %}Profile{% endblock title%}
+
+{% block content %}
+    <div class="container"> 
+        <h2>Profile</h2>  
+
+
+        <h2>My Videos</h2>
+        <a href = "{% url 'upload' %}">Upload Videos</a>
+        <ul>
+            {% for video in videos %}
+                <li>
+                    <h2>{{ video.title }}</h2>
+                    <p>{{ video.description }}</p>
+                    <video width="320" height="240" controls poster="{{ video.thumbnail.url }}">
+                        <source src="{{ video.video_file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p>Uploaded at: {{ video.date_posted | date:"M d, Y" }}</p>
+                </li>
+            {% endfor %}
+        </ul> 
+    </div>
+{% endblock content %}
+</div>

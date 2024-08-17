@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a href="{% url 'home' %}" class="navbar-brand">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <form class="navbar-search" method="GET" action="">
+            <input class="navbar-search-input" name="q" type="text" placeholder="Search" aria-label="Search" value={{ request.GET.q }}>
+            <button type="submit" class="navbar-search-button"><ion-icon name="search-outline"></ion-icon></button>
+        </form>
+        <ul class="navbar-nav mr-auto"> 
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        MENU<span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'upload' %}">Upload Video</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="" width="35" height="35" class="d-inline-block rounded-circle" alt="Profile">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="">View Profile</a>
+                        <a class="dropdown-item" href="">Edit Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="navbar-login">
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

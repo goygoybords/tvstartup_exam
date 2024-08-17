@@ -1,0 +1,162 @@
+{% extends 'layouts/index.html' %}
+
+{% block title %} {{ video.title }} {% endblock title%}
+
+
+<!-- <input type="hidden" id="play-video-url" data-url="{% url 'play-video' %}" /> -->
+
+{% block content %}
+	<div class="container" id="video-details">
+		<div class="row mt-5 video-player" data-setup='{"playbackRates": [0.5, 1, 1.5, 2], "fluid": true}'>
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+					<video-js
+					width="720"
+					height="205"
+					controls
+					data-setup='{"playbackRates": [0.5, 1, 1.5, 2], "fluid": true}'>
+					<source src="" type="video/mp4">
+					<p class="vjs-no-js">
+					To view this video please enable Javascript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+					</p>
+					</video-js>
+			</div>
+		</div>
+		<div class="row align-contents-center">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 col-sm-12 col-xs-12">
+				
+				<div class="d-flex pt-4 w-100">
+					<div class="col pl-0">
+						<h5>{{ video.title }}</h5>
+						<div class="text-muted">
+							<p>{{ video.date_posted | date:"M d, Y" }}</p>
+						</div>
+                        <video width="320" height="240" controls poster="{{ video.thumbnail.url }}">
+                            <source src="{{ video.video_file.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+					</div>
+					<div class="video-action px-3">
+						<button title="Share" class="btn btn-rounded btn-outline-secondary" type="button"  data-toggle="modal" data-target="#exampleModal">
+							<ion-icon class="mr-1" name="share-social-outline" >
+		                    </ion-icon> Share
+						</button>
+	                    
+	                    <!-- Modal -->
+	                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	                        <div class="modal-dialog" role="document">
+	                        <div class="modal-content">
+	                            <div class="modal-header">
+	                            <h5 class="modal-title" id="exampleModalLabel">Share This Video!</h5>
+	                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                                <span aria-hidden="true">&times;</span>
+	                            </button>
+	                            </div>
+	                            <div class="modal-body text-center">
+	                                <ion-icon class="social-share-icons twitter-social-color" name="logo-twitter" data-sharer="twitter" data-title="Checkout {{ object.title }}!" data-hashtags="" data-url="http://localhost:8000/videos/{{ object.pk }}">Share on Twitter</ion-icon>                                
+	                                <ion-icon class="social-share-icons facebook-social-color" name="logo-facebook" data-sharer="facebook" data-title="Checkout {{ object.title }} by {{ object.uploader }}!" data-hashtags="" data-url="http://localhost:8000/videos/{{ object.pk }}">Share on Facebook</ion-icon>
+	                                <ion-icon class="social-share-icons reddit-social-color" name="logo-reddit" data-sharer="reddit" data-title="Checkout {{ object.title }} by {{ object.uploader }}!" data-hashtags="" data-url="http://localhost:8000/videos/{{ object.pk }}">Share on Reddit</ion-icon>
+	                                <p class="mt-3">Link: http://localhost:8000/videos/{{ object.pk }}</p>
+	                            </div>
+	                        </div>
+	                        </div>
+	                    </div>
+					</div>
+				</div>
+				
+				{% if object.uploader == user %}
+					<div class="video-action">
+						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Edit Video" href="{% url 'update-video' object.pk %}">
+						<ion-icon name="pencil-outline" class="mr-1"></ion-icon> Edit video
+						</a>
+						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Delete Video" href="{% url 'delete-video' object.pk %}"><ion-icon name="close-outline"  class="mr-1"></ion-icon> Delete video</a>
+					</div>
+				{% endif %}
+				<div class="card mt-3 text-dark b-0">
+					<div class="card-body mt-0">
+						<div class="p-4">
+							{% if user.is_authenticated %}
+						<form id="comment-form" method="POST">
+							{% csrf_token %}
+							<legend class="border-bottom d-none mb-4">Leave a Comment!</legend>
+					
+							<input type="submit" class="btn btn-primary btn-block" value="Post comment"/>
+						</form>
+						{% else %}
+						<a class="btn btn-outline-info btn-block" href="{% url 'login' %}">Sign In To Post a Comment!</a>
+						{% endif %}
+						</div>
+					</div>
+				</div> 
+				<div id="comment-section" class="mt-4">
+					<div class="pb-2">2 Comments</div>
+					{% for comment in comments %}
+					<div class="d-flex w-100 mt-0 py-3 border-top">
+						<div>
+							<img class="rounded-circle" height="40px" width="40px" src="https://img.freepik.com/premium-vector/eyeglasses-bearded-asian-man-relaxed-standing-black-white-2d-vector-avatar-illustration-cheerful-mature-male-outline-cartoon-character-face-isolated-confident-headshot-posing-flat-portrait_151150-21790.jpg?w=740">
+						</div>
+						<div class="col ">
+							<p class="mb-1"><strong>@{{ comment.user }}</strong></p>
+							<p class="mb-1">{{ comment.comment }}</p>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+	</div>
+</div>
+<div class="padding-navbar"></div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(document).on('submit', '#comment-form', function(e) {
+			e.preventDefault();
+
+			console.log('entering ajax')
+
+			$.ajax({
+				type:'POST',
+				url:$('#play-video-url').attr("data-url"),
+				data:{
+					comment:$('#id_comment').val(),
+					csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+				},
+				success: function (data){
+
+					console.log(data)
+					console.log(data.user)
+					console.log(data.comment)
+					console.log(data.commentuser)
+					
+					var newDiv = document.createElement('div');
+
+					var commentHTML = `
+						<div class="row mt-3">
+							<div class="col-md-8 col-sm-12 border-bottom">
+								<h5>${data.user}</h5>
+								<p>${data.comment}</p>
+							</div>
+						</div>
+					`;
+
+					// Set the content and style of the new div
+					newDiv.innerHTML = commentHTML;
+				
+					// Get the parent element of the comments section
+					var commentsSection = document.getElementById('comment-section');
+				
+					// Insert the new div before the comments section
+					commentsSection.parentNode.insertBefore(newDiv, commentsSection);
+					console.log('finished adding new comment')
+				}
+			});
+			
+			var textbox = document.getElementById('id_comment');
+            textbox.value = '';
+		});
+	});
+</script>
+{% endblock scripts %}
