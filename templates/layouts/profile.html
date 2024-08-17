@@ -1,27 +1,53 @@
 {% extends 'layouts/index.html' %}
 
-{% block title %}Profile{% endblock title%}
+{% block title %}View Profile{% endblock title%}
 
 {% block content %}
-    <div class="container"> 
-        <h2>Profile</h2>  
-
-
-        <h2>My Videos</h2>
-        <a href = "{% url 'upload' %}">Upload Videos</a>
-        <ul>
-            {% for video in videos %}
-                <li>
-                    <h2>{{ video.title }}</h2>
-                    <p>{{ video.description }}</p>
-                    <video width="320" height="240" controls poster="{{ video.thumbnail.url }}">
-                        <source src="{{ video.video_file.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <p>Uploaded at: {{ video.date_posted | date:"M d, Y" }}</p>
-                </li>
-            {% endfor %}
-        </ul> 
+    
+<div class="padding-navbar p-0"></div>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-12">
+            <div class="card align-items-center p-5 shadow" id = "profile_pic_container">
+            <div class="d-flex w-100">
+                <div class="pr-5">
+                    <img class="rounded-circle" height="80px" width="80px" src="/media/uploads/profile_picture/eyeglass.jpg">
+                </div>
+                <div class="col pt-3">
+                    <h4>{{ profile.first_name }} {{ profile.last_name }}</h4>
+                    <p class="text-dark">@{{ profile.username }}</p>
+                </div>  
+                <div>
+                    <form class="pt-2" action="">
+                       <button class="btn btn-outline-primary" type="submit" value="Edit Profile" > Edit Profile </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
     </div>
-{% endblock content %}
+    
+	<div class="mt-5 mb-4 border-bottom"></div>
+
+    <h3>Your Videos</h3>
+
+    <div class="row justify-content-start mt-3 mb-5 no-gutters">
+        {% for video in videos %}
+            <div class="col-md-3">
+                <div class="card mx-1 border-0 text-dark">
+                    <img src="{{ video.thumbnail.url }}" class="card-img-top" alt="thumbnail">
+                    <div class="card-body">
+                        <h5 class="card-title text-left">{{ video.title }}</h5>
+                        <p class="card-text text-muted text-left">
+                            <span class="mr-4 d-none">{{ video.uploader }}</span>
+                            <span>{{ video.date_posted | date:"M d, Y" }}</span>
+                        </p>
+                        <a href="{% url 'view_video' video.id %}" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="padding-navbar"></div>
 </div>
+{% endblock %}

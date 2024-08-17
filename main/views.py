@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 # from django.views.generic.detail import DetailView
 # from django.views.generic.list import ListView
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from .models import Video, Comments
 # from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
@@ -14,8 +14,15 @@ def index(request):
     
 @login_required(login_url='/login/', redirect_field_name='redirect_to')
 def profile_view(request):
-    videos = Video.objects.filter(uploader=request.user)
-    return render(request, 'layouts/profile.html', {'videos': videos})
+    profile = get_object_or_404(User, id=request.user.id)
+    video = Video.objects.all().filter(uploader=request.user).order_by('-date_posted')
+
+    context = {
+        'profile': profile,
+        'videos': video
+    }
+
+    return render(request, 'layouts/profile.html', context)
 
 @login_required(login_url='/login/', redirect_field_name='redirect_to')
 def upload_video(request):

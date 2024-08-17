@@ -28,7 +28,7 @@
                         <img src="/media/uploads/profile_picture/eyeglass.jpg" width="35" height="35" class="d-inline-block rounded-circle" alt="Profile">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="">View Profile</a>
+                        <a class="dropdown-item" href="{% url 'profile' %}">View Profile</a>
                         <a class="dropdown-item" href="">Edit Profile</a>
                         <a class="dropdown-item" href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign Out</a>
                         <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
