@@ -18,3 +18,12 @@ class Video(models.Model):
 
     def __str__(self):
         return self.title
+
+class Comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey('Video', on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_on = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"User: {self.user} | {self.created_on.strftime('%b %d %Y %I:%M %p')}"

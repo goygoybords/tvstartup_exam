@@ -2,8 +2,7 @@
 
 {% block title %} {{ video.title }} {% endblock title%}
 
-
-<!-- <input type="hidden" id="play-video-url" data-url="{% url 'play-video' %}" /> -->
+<input type="hidden" id="play-video-url" data-url="{% url 'view_video' %}" />
 
 {% block content %}
 	<div class="container" id="video-details">
@@ -15,7 +14,7 @@
 					height="205"
 					controls
 					data-setup='{"playbackRates": [0.5, 1, 1.5, 2], "fluid": true}'>
-					<source src="" type="video/mp4">
+					<source src="/media/{{ video.video_file }}" type="video/mp4">
 					<p class="vjs-no-js">
 					To view this video please enable Javascript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
 					</p>
@@ -32,10 +31,6 @@
 						<div class="text-muted">
 							<p>{{ video.date_posted | date:"M d, Y" }}</p>
 						</div>
-                        <video width="320" height="240" controls poster="{{ video.thumbnail.url }}">
-                            <source src="{{ video.video_file.url }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
 					</div>
 					<div class="video-action px-3">
 						<button title="Share" class="btn btn-rounded btn-outline-secondary" type="button"  data-toggle="modal" data-target="#exampleModal">
@@ -65,32 +60,34 @@
 					</div>
 				</div>
 				
-				{% if object.uploader == user %}
+				{% if video.uploader == user %}
 					<div class="video-action">
-						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Edit Video" href="{% url 'update-video' object.pk %}">
-						<ion-icon name="pencil-outline" class="mr-1"></ion-icon> Edit video
+						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Edit Video" href="">
+						    <ion-icon name="pencil-outline" class="mr-1"></ion-icon> Edit video
 						</a>
-						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Delete Video" href="{% url 'delete-video' object.pk %}"><ion-icon name="close-outline"  class="mr-1"></ion-icon> Delete video</a>
+						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Delete Video" href="{% url 'delete_video' video.id %}">
+                            <ion-icon name="close-outline"  class="mr-1"></ion-icon> Delete video
+                        </a>
 					</div>
 				{% endif %}
 				<div class="card mt-3 text-dark b-0">
 					<div class="card-body mt-0">
 						<div class="p-4">
 							{% if user.is_authenticated %}
-						<form id="comment-form" method="POST">
-							{% csrf_token %}
-							<legend class="border-bottom d-none mb-4">Leave a Comment!</legend>
-					
-							<input type="submit" class="btn btn-primary btn-block" value="Post comment"/>
-						</form>
-						{% else %}
-						<a class="btn btn-outline-info btn-block" href="{% url 'login' %}">Sign In To Post a Comment!</a>
-						{% endif %}
+                                <form id="comment-form" method="POST">
+                                    {% csrf_token %}
+                                    <legend class="border-bottom d-none mb-4">Leave a Comment!</legend>
+                                    {{ form }}
+                                    <input type="submit" class="btn btn-primary btn-block" value="Post comment"/>
+                                </form>
+						    {% else %}
+						        <a class="btn btn-outline-info btn-block" href="{% url 'login' %}">Sign In To Post a Comment!</a>
+						    {% endif %}
 						</div>
 					</div>
 				</div> 
 				<div id="comment-section" class="mt-4">
-					<div class="pb-2">2 Comments</div>
+					<div class="pb-2">Comments</div>
 					{% for comment in comments %}
 					<div class="d-flex w-100 mt-0 py-3 border-top">
 						<div>

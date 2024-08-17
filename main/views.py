@@ -1,12 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
-# from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 # from django.views.generic.detail import DetailView
 # from django.views.generic.list import ListView
 # from django.contrib.auth.models import User
-from .models import Video
+from .models import Video, Comments
 # from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from .forms import VideoUploadForm
+from .forms import VideoUploadForm, CommentForm
 
 # Create your views here.
 def index(request):
@@ -37,9 +36,28 @@ def upload_video(request):
 
 def view_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
-    return render(request, 'layouts/view_video.html', {'video': video})
+    form = CommentForm()
+    comments = Comments.objects.filter(video=video).order_by('-created_on')
+    context = {
+        'video': video,     
+        'comments': comments,
+        'form': form,
+    }
+    return render(request, 'layouts/view_video.html', context)
 
 
+@login_required(login_url='/login/', redirect_field_name='redirect_to')
+def delete_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    # Check if the logged-in user is the uploader of the video
+    if request.user != video.uploader:
+        return redirect('home')  # Redirect to home if the user is not authorized
+
+    if request.method == 'POST':
+        video.delete()  # Delete the video
+        return redirect(reverse('home'))  # Redirect to the home page after deletion
+    
+    return render(request, 'layouts/delete_video.html', {'video': video})
 
 
 
