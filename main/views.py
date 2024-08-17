@@ -12,23 +12,11 @@ def index(request):
     videos = Video.objects.all()
     return render(request, 'layouts/home.html', {'videos': videos})
     
-@login_required(login_url='/login/', redirect_field_name='redirect_to')
-def profile_view(request):
-    profile = get_object_or_404(User, id=request.user.id)
-    video = Video.objects.all().filter(uploader=request.user).order_by('-date_posted')
-
-    context = {
-        'profile': profile,
-        'videos': video
-    }
-
-    return render(request, 'layouts/profile.html', context)
-
-@login_required(login_url='/login/', redirect_field_name='redirect_to')
+@login_required(login_url='/account/', redirect_field_name='redirect_to')
 def upload_video(request):
     return render(request, 'layouts/upload_video.html')
 
-@login_required(login_url='/login/', redirect_field_name='redirect_to')
+@login_required(login_url='/account/', redirect_field_name='redirect_to')
 def upload_video(request):
     if request.method == 'GET':
         form = VideoUploadForm()
@@ -53,16 +41,15 @@ def view_video(request, video_id):
     return render(request, 'layouts/view_video.html', context)
 
 
-@login_required(login_url='/login/', redirect_field_name='redirect_to')
+@login_required(login_url='/account/', redirect_field_name='redirect_to')
 def delete_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
-    # Check if the logged-in user is the uploader of the video
     if request.user != video.uploader:
-        return redirect('home')  # Redirect to home if the user is not authorized
+        return redirect('home')
 
     if request.method == 'POST':
-        video.delete()  # Delete the video
-        return redirect(reverse('home'))  # Redirect to the home page after deletion
+        video.delete()
+        return redirect(reverse('home'))
     
     return render(request, 'layouts/delete_video.html', {'video': video})
 

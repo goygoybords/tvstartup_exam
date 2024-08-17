@@ -1,0 +1,31 @@
+{% extends 'layouts/index.html' %}
+
+{% block title %}Edit Profile{% endblock title%}
+
+{% block content %}
+<div class="padding-navbar"></div>
+<div class="container mb-5" id = "profile_container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-12 col-xs-12">
+            <div class="card text-dark ">
+                <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <legend class="border-bottom mb-4 pb-4">Update Profile</legend>
+                <div class="d-flex w-100 mt-0 pb-4 mb-4 border-bottom align-items-center">
+                        <div>
+                            <img class="rounded-circle" height="60px" width="60px" style="height:100px !important;" src="https://img.freepik.com/premium-vector/eyeglasses-bearded-asian-man-relaxed-standing-black-white-2d-vector-avatar-illustration-cheerful-mature-male-outline-cartoon-character-face-isolated-confident-headshot-posing-flat-portrait_151150-21790.jpg?w=740">
+                        </div>
+                        <div class="px-3 video-action">
+                            <a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Delete Video" href="/home/19/delete"><ion-icon name="close-outline" class="mr-1 md hydrated" role="img"></ion-icon> Remove Photo</a>
+                        </div>
+                    </div>
+
+                    form here
+                <button class="btn btn-outline-primary btn-block mt-3" type="submit">Submit</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

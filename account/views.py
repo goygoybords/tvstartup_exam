@@ -1,16 +1,8 @@
-# To handle views and redirects
-from django.shortcuts import render, redirect
-# To Import auth functions form Django
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-# The login_required decorator to protect views
 from django.contrib.auth.decorators import login_required
-# For class-based views[CBV]
-from django.contrib.auth.mixins import LoginRequiredMixin
-# For class-based views[CBV]
-from django.views import View
-#  Import the User class (model)
 from django.contrib.auth.models import User
-# Import the RegisterForm from forms.py
+from main.models import Video
 from .forms import RegisterForm
 
 def register_process(request):
@@ -51,4 +43,21 @@ def logout_process(request):
     else:
         return redirect('home')
 
+@login_required(login_url='/account/', redirect_field_name='redirect_to')
+def view_profile(request):
+    profile = get_object_or_404(User, id=request.user.id)
+    video = Video.objects.all().filter(uploader=request.user).order_by('-date_posted')
+
+    context = {
+        'profile': profile,
+        'videos': video
+    }
+
+    return render(request, 'layouts/profile.html', context)
+
+@login_required(login_url='/account/', redirect_field_name='redirect_to')
+def edit_profile(request, user):
+    profile = get_object_or_404(User, username=user)
+   
+    return render(request, 'layouts/edit_profile.html', {'profile': profile})
     
