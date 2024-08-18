@@ -62,7 +62,7 @@
 				
 				{% if video.uploader == user %}
 					<div class="video-action">
-						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Edit Video" href="">
+						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Edit Video" href="{% url 'update_video' video.id %}">
 						    <ion-icon name="pencil-outline" class="mr-1"></ion-icon> Edit video
 						</a>
 						<a class="video-icons icon-color mr-2 btn btn-rounded btn-outline-secondary" title="Delete Video" href="{% url 'delete_video' video.id %}">
