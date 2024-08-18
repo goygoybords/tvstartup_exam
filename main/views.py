@@ -66,7 +66,7 @@ class uploadVideo(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
     def get_success_url(self) -> str:
-        return reverse('view_video', kwargs={'pk': self.object.pk})
+        return reverse('view_video', kwargs={'pk': self.object.id})
 
 @login_required(login_url='/account/', redirect_field_name='redirect_to')
 def update_video(request, video_id):

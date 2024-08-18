@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import User
 
-video_extensions = ["mp4"]
+video_extensions = ["mp4", "mov", "avi", "wmv"]
 thumb_extensions = ["png", "jpg", "jpeg"]
 
 class Video(models.Model):
