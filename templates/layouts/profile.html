@@ -18,8 +18,8 @@
                     <p class="text-dark">@{{ profile.username }}</p>
                 </div>  
                 <div>
-                    <form class="pt-2" action="">
-                       <button class="btn btn-outline-primary" type="submit" value="Edit Profile" > Edit Profile </button>
+                    <form class="pt-2">
+                        <a class="btn btn-outline-primary" href="{% url 'edit_profile' user %}">Edit Profile</a>
                     </form>
                 </div>
             </div>
