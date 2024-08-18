@@ -2,7 +2,7 @@
 
 {% block title %} {{ video.title }} {% endblock title%}
 
-<input type="hidden" id="play-video-url" data-url="{% url 'view_video' %}" />
+<input type="hidden" id="play-video-url" data-url="{% url 'view_video' video.id %}" />
 
 {% block content %}
 	<div class="container" id="video-details">

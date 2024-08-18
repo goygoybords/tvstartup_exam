@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from .models import Video, Comments
 from .forms import VideoUploadForm, CommentForm
 from .tasks import uploadVideoFiles
-from django.views.generic.edit import CreateView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
@@ -85,16 +86,37 @@ def update_video(request, video_id):
     return render(request, 'layouts/edit_video.html', {'form': form})
 
 def view_video(request, video_id):
-    video = get_object_or_404(Video, id=video_id)
-    form = CommentForm()
-    comments = Comments.objects.filter(video=video).order_by('-created_on')
-    context = {
-        'video': video,     
-        'comments': comments,
-        'form': form,
-    }
-    return render(request, 'layouts/view_video.html', context)
+    if request.method == 'GET':
+        video = get_object_or_404(Video, id=video_id)
+        form = CommentForm()
+        comments = Comments.objects.filter(video=video).order_by('-created_on')
+        context = {
+            'video': video,     
+            'comments': comments,
+            'form': form,
+        }
+        return render(request, 'layouts/view_video.html', context)
 
+    elif request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            user = str(request.user)
+            comment = Comments(
+                user=request.user,
+                comment=form.cleaned_data['comment'],
+                video=video
+            )
+            comment.save()
+            response = {
+                'user': user,
+                'comment': form.cleaned_data['comment'],
+            }
+            return JsonResponse(response)
+        else:
+            response = {
+                'errors': form.errors
+            }
+            return JsonResponse(response, status=400)
 
 @login_required(login_url='/account/', redirect_field_name='redirect_to')
 def delete_video(request, video_id):
@@ -107,8 +129,3 @@ def delete_video(request, video_id):
         return redirect(reverse('home'))
     
     return render(request, 'layouts/delete_video.html', {'video': video})
-
-
-
-
-
