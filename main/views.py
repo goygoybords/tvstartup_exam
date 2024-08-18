@@ -78,7 +78,7 @@ def update_video(request, video_id):
         form = VideoUploadForm(request.POST, request.FILES, instance=video)
         if form.is_valid():
             form.save()
-            return redirect('view_video', id=video_id)
+            return redirect('view_video', video_id=video_id)
     else:
         form = VideoUploadForm(instance=video)
 
