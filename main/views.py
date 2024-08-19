@@ -32,42 +32,28 @@ def search_video(request):
     
 @login_required(login_url='/account/', redirect_field_name='redirect_to')
 def upload_video(request):
-    return render(request, 'layouts/upload_video.html')
+    if request.method == 'POST':
+        form = VideoUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            titles = request.POST.getlist('title')
+            descriptions = request.POST.getlist('description')
+            video_files = request.FILES.getlist('video_file')
+            thumbnails = request.FILES.getlist('thumbnail')
 
-class uploadVideo(LoginRequiredMixin, CreateView):
-    model  = Video
-    form_class = VideoUploadForm
-    template_name = 'layouts/upload_video.html'
-    
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+            # Loop through each set of uploaded data and create a Video instance
+            for i in range(len(titles)):
+                Video.objects.create(
+                    title=titles[i],
+                    description=descriptions[i],
+                    video_file=video_files[i],
+                    thumbnail=thumbnails[i],
+                    uploader=request.user
+                )
+            return HttpResponseRedirect(reverse('profile'))
+    else:
+        form = VideoUploadForm()
 
-    def form_valid(self, form):
-        form.instance.uploader = self.request.user
-        titles = self.request.POST.getlist('title')
-        descriptions = self.request.POST.getlist('description')
-        video_files = self.request.FILES.getlist('video_file')
-        thumbnails = self.request.FILES.getlist('thumbnail')
-
-        for i in range(len(titles)):
-            video_instance = Video.objects.create(
-                title=titles[i],
-                description=descriptions[i],
-                video_file=video_files[i],
-                thumbnail=thumbnails[i],
-                uploader=self.request.user
-            )
-            celery_worker = uploadVideoFiles.delay(video_instance.id, video_files[i].read(), thumbnails[i].read())
-            print(f"{titles[i]} processed by celery {celery_worker.id}")
-            video_instance.save()
-
-        return HttpResponseRedirect (reverse('home'))
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
-
-    def get_success_url(self) -> str:
-        return reverse('view_video', kwargs={'pk': self.object.id})
+    return render(request, 'layouts/upload_video.html', {'form': form})
 
 @login_required(login_url='/account/', redirect_field_name='redirect_to')
 def update_video(request, video_id):
