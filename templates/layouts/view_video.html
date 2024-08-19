@@ -146,7 +146,7 @@
 					var commentsSection = document.getElementById('comment-section');
 				
 					// Insert the new div before the comments section
-					commentsSection.parentNode.insertBefore(newDiv, commentsSection);
+					commentsSection.parentNode.insertAfter(newDiv, commentsSection);
 					console.log('finished adding new comment')
 				}
 			});

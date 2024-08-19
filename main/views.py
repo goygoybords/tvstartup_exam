@@ -40,7 +40,6 @@ def upload_video(request):
             video_files = request.FILES.getlist('video_file')
             thumbnails = request.FILES.getlist('thumbnail')
 
-            # Loop through each set of uploaded data and create a Video instance
             for i in range(len(titles)):
                 Video.objects.create(
                     title=titles[i],
@@ -72,8 +71,8 @@ def update_video(request, video_id):
     return render(request, 'layouts/edit_video.html', {'form': form})
 
 def view_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
     if request.method == 'GET':
-        video = get_object_or_404(Video, id=video_id)
         form = CommentForm()
         comments = Comments.objects.filter(video=video).order_by('-created_on')
         context = {
