@@ -5,15 +5,17 @@ import { VideoService } from "../video.service"
 import { VideoList } from '../video-list';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ NavbarComponent, FooterComponent, CommonModule, DatePipe],
+  imports: [ NavbarComponent, FooterComponent, CommonModule, DatePipe, RouterModule, RouterOutlet],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
 })
+
 export class HomeComponent implements OnInit  
 {
     title = "Home";
@@ -26,11 +28,10 @@ export class HomeComponent implements OnInit
         this.videos = data.map(video => {
           const formattedVideo = {
             ...video,
-            formatted_date: this.datePipe.transform(video.date_posted, 'MMM d, y, h:mm a')
+            formattedDate: this.datePipe.transform(video.date_posted, 'MMM d, y, h:mm a')
           };
           return formattedVideo;
         });
       });
     }
-    
 }
