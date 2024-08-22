@@ -5,11 +5,12 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Video, Comments
 from .forms import VideoUploadForm, CommentForm
-from .tasks import uploadVideoFiles
-from django.views.generic.edit import CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import VideoSerializer
 
 # Create your views here.
 def index(request):
@@ -114,3 +115,9 @@ def delete_video(request, video_id):
         return redirect(reverse('home'))
     
     return render(request, 'layouts/delete_video.html', {'video': video})
+
+class VideoListAPIView(APIView):
+    def get(self, request):
+        videos = Video.objects.all()
+        serializer = VideoSerializer(videos, many=True)
+        return Response(serializer.data)
