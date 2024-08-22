@@ -21,15 +21,16 @@ export class HomeComponent implements OnInit
 
     constructor(private videoService: VideoService, private datePipe:DatePipe) { }
     
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
       this.videoService.getVideos().subscribe(data => {
         this.videos = data.map(video => {
-          return {
+          const formattedVideo = {
             ...video,
-            formattedDate: this.datePipe.transform(video.date_posted, 'MMM d, y, h:mm a')
+            formatted_date: this.datePipe.transform(video.date_posted, 'MMM d, y, h:mm a')
           };
+          return formattedVideo;
         });
       });
     }
+    
 }
