@@ -118,6 +118,6 @@ def delete_video(request, video_id):
 
 class VideoListAPIView(APIView):
     def get(self, request):
-        videos = Video.objects.all()
+        videos = Video.objects.all().order_by('-date_posted')
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
