@@ -15,7 +15,6 @@ export class AboutComponent implements AfterViewInit
 {
   ngAfterViewInit()
   {
-    // Ensure this runs only after the view is initialized
     $('.tm-hero').each(function()
     {
         var imageSrc = $(this).attr('data-image-src');
