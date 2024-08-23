@@ -5,7 +5,6 @@ import { VideoService } from "../video.service"
 import { VideoList } from '../video-list';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',

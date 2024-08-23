@@ -5,6 +5,8 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { AfterViewInit } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { VideoService } from "../video.service"
+import { VideoList } from '../video-list';
 
 @Component({
   selector: 'app-video-detail',
@@ -15,17 +17,27 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class VideoDetailComponent implements  OnInit, AfterViewInit
 {
-  videoId: string | null = null;
+    private videoId: number | null = null;
+    video: VideoList | null = null;
+    
+    constructor(private route: ActivatedRoute, private videoService: VideoService) {}
 
-  constructor(private route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.videoId = params.get('id'); // Access the id parameter
-      console.log("id = " + this.videoId); // Do something with the id
-    });
-  }
-
+    ngOnInit(): void
+    {
+        this.route.paramMap.subscribe(params =>
+        {
+            const idParam = params.get('id');
+            this.videoId = idParam ? Number(idParam) : null;
+            console.log("id = " + this.videoId);
+            if (this.videoId !== null)
+            {
+                this.videoService.getVideoById(this.videoId).subscribe(data =>
+                {
+                    this.video = data;
+                });
+            }
+        });
+    } 
 
   ngAfterViewInit()
   {

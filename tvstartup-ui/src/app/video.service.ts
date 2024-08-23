@@ -23,6 +23,6 @@ export class VideoService
     getVideoById(id: number): Observable<VideoList>
     {
         this.videoEndpoint = "view_video_api/";
-        return this.http.get<VideoList>(`${this.baseUrl}${this.videoEndpoint}${id}/`);
+        return this.http.get<VideoList>(`${this.baseUrl}${this.videoEndpoint}${id}`);
     }
 }
