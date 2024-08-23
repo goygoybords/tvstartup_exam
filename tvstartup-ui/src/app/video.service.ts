@@ -25,4 +25,10 @@ export class VideoService
         this.videoEndpoint = "view_video_api/";
         return this.http.get<VideoList>(`${this.baseUrl}${this.videoEndpoint}${id}`);
     }
+
+    searchVideos(query: string): Observable<VideoList[]>
+    {
+        this.videoEndpoint = "search_video_api/";
+        return this.http.get<VideoList[]>(`${this.baseUrl}${this.videoEndpoint}?search=${query}`);
+    }
 }
