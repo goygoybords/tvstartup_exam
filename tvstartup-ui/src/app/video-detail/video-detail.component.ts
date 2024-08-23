@@ -7,11 +7,12 @@ import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { VideoService } from "../video.service"
 import { VideoList } from '../video-list';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-video-detail',
   standalone: true,
-  imports: [NavbarComponent, FooterComponent, RouterOutlet, RouterModule],
+  imports: [NavbarComponent, FooterComponent, RouterOutlet, RouterModule, CommonModule],
   templateUrl: './video-detail.component.html',
   styleUrl: './video-detail.component.css'
 })
@@ -28,7 +29,6 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         {
             const idParam = params.get('id');
             this.videoId = idParam ? Number(idParam) : null;
-            console.log("id = " + this.videoId);
             if (this.videoId !== null)
             {
                 this.videoService.getVideoById(this.videoId).subscribe(data =>
