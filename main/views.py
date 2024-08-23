@@ -139,6 +139,5 @@ class SearchVideoAPIView(APIView):
         else:
             videos = Video.objects.none()
 
-        video_list = list(videos.values('id', 'title', 'description', 'video_file', 'thumbnail', 'date_posted'))
-        serializer = VideoSerializer(video_list, many=True)
+        serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
