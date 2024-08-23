@@ -15,21 +15,22 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
 })
 
-export class HomeComponent {
-  title = 'Home';
-  videos: VideoList[] = [];
+export class HomeComponent
+{
+    title = 'Home';
+    videos: VideoList[] = [];
 
-  constructor(private videoService: VideoService) {}
+    constructor(private videoService: VideoService) {}
 
-  fetchVideos()
-  {
-    this.videoService.getVideos().subscribe((data: VideoList[]) => {
-      this.videos = data;
-    });
-  }
+    fetchVideos()
+    {
+      this.videoService.getVideos().subscribe((data: VideoList[]) => {
+        this.videos = data;
+      });
+    }
 
-  ngOnInit(): void
-  {
-    this.fetchVideos();
-  }
+    ngOnInit(): void
+    {
+      this.fetchVideos();
+    }
 }

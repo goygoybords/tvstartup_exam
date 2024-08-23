@@ -20,32 +20,54 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
 {
     private videoId: number | null = null;
     video: VideoList | null = null;
-    
+    video_list: VideoList[] = [];
+
     constructor(private route: ActivatedRoute, private videoService: VideoService) {}
 
     ngOnInit(): void
     {
-        this.route.paramMap.subscribe(params =>
-        {
-            const idParam = params.get('id');
-            this.videoId = idParam ? Number(idParam) : null;
-            if (this.videoId !== null)
-            {
-                this.videoService.getVideoById(this.videoId).subscribe(data =>
-                {
-                    this.video = data;
-                });
-            }
-        });
-    } 
+        this.displayMoreVideos();
+        this.displaySpecificVideo();
+    }
 
-  ngAfterViewInit()
-  {
-    $('.tm-hero').each(function()
+    private displayMoreVideos()
     {
-        var imageSrc = $(this).attr('data-image-src');
-        if (imageSrc)
-          $(this).css('background-image', 'url(' + imageSrc + ')');
-    });
-  }
+        this.videoService.getVideos().subscribe((data: VideoList[]) =>
+        {
+          this.video_list = data;
+        });
+    }
+
+    private displaySpecificVideo(): void
+    {
+        this.route.paramMap.subscribe(params => 
+        {
+          this.videoId = this.getVideoIdFromParams(params.get('id'));
+          if (this.videoId !== null)
+            this.fetchVideoById(this.videoId);
+        });
+    }
+
+    private getVideoIdFromParams(idParam: string | null): number | null 
+    {
+        return idParam ? Number(idParam) : null;
+    }
+  
+    private fetchVideoById(videoId: number): void
+    {
+        this.videoService.getVideoById(videoId).subscribe(data =>
+        {
+          this.video = data;
+        });
+    }
+
+    ngAfterViewInit()
+    {
+      $('.tm-hero').each(function()
+      {
+          var imageSrc = $(this).attr('data-image-src');
+          if (imageSrc)
+            $(this).css('background-image', 'url(' + imageSrc + ')');
+      });
+    }
 }
