@@ -1,4 +1,4 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HomeComponent } from "./home/home.component";
 import { NavbarComponent } from "./navbar/navbar.component";
@@ -23,9 +23,12 @@ export class AppComponent implements OnInit
     title = "tvstartup-ui";
     ngOnInit(): void
     {
+      if (typeof document !== 'undefined')
+      {
         const script = document.createElement('script');
         script.src = '/assets/js/video.js';
         script.async = true;
         document.body.appendChild(script);
+      }
     }
 }

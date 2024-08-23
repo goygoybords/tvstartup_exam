@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, Renderer2 } from '@angular/core';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { FooterComponent } from "../footer/footer.component";
 import { RouterModule, RouterOutlet } from '@angular/router';
@@ -11,15 +11,20 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   styleUrl: './contact.component.css',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
 })
-export class ContactComponent implements AfterViewInit {
-
-  ngAfterViewInit()
+export class ContactComponent implements AfterViewInit
+{
+  constructor(private renderer: Renderer2) { }
+  ngAfterViewInit(): void
   {
-    $('.tm-hero').each(function()
+    if (typeof document !== 'undefined')
     {
-        var imageSrc = $(this).attr('data-image-src');
+      const tmHeroes = document.querySelectorAll('.tm-hero');
+      tmHeroes.forEach((tmHero) =>
+      {
+        const imageSrc = tmHero.getAttribute('data-image-src');
         if (imageSrc)
-          $(this).css('background-image', 'url(' + imageSrc + ')');
-    });
+          this.renderer.setStyle(tmHero, 'background-image', `url(${imageSrc})`);
+      });
+    }
   }
 }
