@@ -5,6 +5,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from main.models import Video
 from .forms import RegisterForm, EditProfileForm
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework import status
+
 
 def register_process(request):
     if request.method == "POST":
@@ -69,3 +75,16 @@ def edit_profile(request, user):
         form = EditProfileForm(instance=profile)  # Use the correct form class here
 
     return render(request, 'layouts/edit_profile.html', {'form': form, 'profile': profile})
+class LoginAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+         # user = authenticate(request, username=username, password=password)
+        user = { "username" : username , "password" : password}
+        return Response("GOYGOY was here")
+       
+        # if user is not None:
+        #     token, created = Token.objects.get_or_create(user=user)
+        #     return Response({'token': token.key})
+        # else:
+        #     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)

@@ -10,4 +10,7 @@ urlpatterns = [
     #User routes:
     path('profile/', views.view_profile, name='profile'),
     path('<str:user>/update', views.edit_profile, name="edit_profile"),
+
+    #login api routes
+    path('login_api', views.LoginAPIView.as_view(), name="login_api"),
 ]
