@@ -5,4 +5,5 @@ export interface VideoList {
     video_file: string;
     thumbnail: string;
     date_posted: string;
+    uploader_username: string;
 }

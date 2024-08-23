@@ -9,12 +9,20 @@ import { VideoList } from './video-list';
 
 export class VideoService
 {
-  private apiUrl = 'http://127.0.0.1:8000/video_list_api/';
+    private baseUrl = 'http://127.0.0.1:8000/';
+    private videoEndpoint = "";
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {}
 
-  getVideos(): Observable<VideoList[]>
-  {
-      return this.http.get<VideoList[]>(this.apiUrl);
-  }
+    getVideos(): Observable<VideoList[]>
+    {
+        this.videoEndpoint = "video_list_api/";
+        return this.http.get<VideoList[]>(this.baseUrl + this.videoEndpoint);
+    }
+
+    getVideoById(id: number): Observable<VideoList>
+    {
+        this.videoEndpoint = "view_video_api/";
+        return this.http.get<VideoList>(`${this.baseUrl}${this.videoEndpoint}${id}/`);
+    }
 }
