@@ -19,7 +19,7 @@ export class SearchBarComponent
   onSearch()
   {
     console.log('Search query:', this.searchQuery);
-    this.router.navigate(['/home'], { queryParams: { q: this.searchQuery } });
+    this.router.navigate(['/home'], { queryParams: { search: this.searchQuery } });
   }
 
 }

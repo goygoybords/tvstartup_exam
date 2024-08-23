@@ -126,3 +126,19 @@ class ViewVideoAPIView(APIView):
         video = get_object_or_404(Video, id=video_id)
         serializer = VideoSerializer(video)
         return Response(serializer.data)
+class SearchVideoAPIView(APIView):
+    def get(self, request):
+        videos = None
+        searched_data = request.GET.get("search")
+        if searched_data:
+            videos = Video.objects.filter(
+                    Q(title__icontains=searched_data) |
+                    Q(description__icontains=searched_data) |
+                    Q(uploader__username__icontains=searched_data)
+                )
+        else:
+            videos = Video.objects.none()
+
+        video_list = list(videos.values('id', 'title', 'description', 'video_file', 'thumbnail', 'date_posted'))
+        serializer = VideoSerializer(video_list, many=True)
+        return Response(serializer.data)

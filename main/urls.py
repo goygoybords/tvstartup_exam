@@ -12,5 +12,6 @@ urlpatterns = [
     path('search/', views.search_video, name='search_video'),
 
     path('video_list_api/', views.VideoListAPIView.as_view(), name='video_list_api'),   
-    path('view_video_api/<int:video_id>', views.ViewVideoAPIView.as_view(), name='view_video_api'),   
+    path('view_video_api/<int:video_id>', views.ViewVideoAPIView.as_view(), name='view_video_api'),
+    path('search_video_api/', views.SearchVideoAPIView.as_view(), name='search_video_api'),   
 ]
