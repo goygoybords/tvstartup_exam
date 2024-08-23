@@ -11,7 +11,7 @@
                         If you have not created an account yet, then please <a href="#">sign up</a> first.
                     </p>
                 </div>
-                <form id="contact-form" action="" method="POST" class="tm-contact-form mx-auto">
+                <form id="contact-form" (ngSubmit)="onSubmit()" class="tm-contact-form mx-auto">
                     <div class="form-group">
                         <input type="text" name="name" class="form-control rounded-0" placeholder="Name" required />
                     </div>

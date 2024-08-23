@@ -1,23 +1,35 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, Renderer2 } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NavbarComponent, FooterComponent],
+  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements AfterViewInit
+{
+  constructor(private renderer: Renderer2) { }
 
-  ngAfterViewInit()
+  onSubmit()
   {
-    $('.tm-hero').each(function()
+    console.log("test");
+  }
+  ngAfterViewInit(): void
+  {
+    if (typeof document !== 'undefined')
     {
-        var imageSrc = $(this).attr('data-image-src');
+      const tmHeroes = document.querySelectorAll('.tm-hero');
+      tmHeroes.forEach((tmHero) =>
+      {
+        const imageSrc = tmHero.getAttribute('data-image-src');
         if (imageSrc)
-          $(this).css('background-image', 'url(' + imageSrc + ')');
-    });
+          this.renderer.setStyle(tmHero, 'background-image', `url(${imageSrc})`);
+      });
+    }
   }
 }
