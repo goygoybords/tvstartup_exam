@@ -121,3 +121,8 @@ class VideoListAPIView(APIView):
         videos = Video.objects.all().order_by('-date_posted')
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
+class ViewVideoAPIView(APIView):
+    def get(self, request, video_id):
+        video = get_object_or_404(Video, id=video_id)
+        serializer = VideoSerializer(video)
+        return Response(serializer.data)
