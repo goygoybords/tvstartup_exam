@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserModel } from './user-model';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class UserService
     private apiUrl = "";
     private readonly TOKEN_KEY = 'access_token';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private router:Router) {}
 
     register(user: any): Observable<any>
     {
@@ -42,8 +43,14 @@ export class UserService
         return this.getToken() !== null;
     }
     
-    logout(): void
+    logout(): Observable<any>
     {
-        localStorage.removeItem(this.TOKEN_KEY);
+        this.apiUrl = "logout_api";
+        return this.http.post<any>(`${this.baseUrl}${this.apiUrl}`, {});
+    }
+
+    getTokenKey(): string
+    {
+        return this.TOKEN_KEY;
     }
   }

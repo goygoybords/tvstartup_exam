@@ -17,7 +17,18 @@ export class NavbarComponent
 
     logout()
     {
-      this.userService.logout();
-      this.router.navigate(['/login']);
+        this.userService.logout().subscribe(
+        {
+          next: (response) =>
+          {
+            console.log('Logout successful', response);
+            localStorage.removeItem(this.userService.getTokenKey());
+            this.router.navigate(['/login']);
+          },
+          error: (error) =>
+          {
+            console.error('Logout failed', error);
+          }
+        });
     }
 }
