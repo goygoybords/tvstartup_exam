@@ -1,44 +1,46 @@
-import { AfterViewInit, Component, Renderer2 } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../user.service';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { UserService } from '../user.service';
+
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule, RouterOutlet, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
-export class LoginComponent implements AfterViewInit
+export class RegisterComponent
 {
-    name: string = '';
+    first_name: string = '';
+    last_name: string = '';
+    email: string = '';
+    username: string = '';
     password: string = '';
-    constructor(private renderer: Renderer2, private userService: UserService, private router:Router) { }
+
+
+    constructor(private renderer: Renderer2, private userService: UserService, private router:Router) {}
 
     onSubmit()
     {
-      this.userService.login(this.name, this.password).subscribe(
-        (response) =>
-        {
-          console.log('Login successful', response);
-          this.router.navigate(['/home']);
-        },
-        (error) =>
-        {
-          console.error('Login failed', error);
-        }
-      );
+      console.log("Register Here");
+      // this.userService.login(this.name, this.password).subscribe(
+      //   (response) =>
+      //   {
+      //     console.log('Login successful', response);
+      //     this.router.navigate(['/home']);
+      //   },
+      //   (error) =>
+      //   {
+      //     console.error('Login failed', error);
+      //   }
+      // );
     }
-
-    // onSubmit()
-    // {
-    //   const user_details = { name : this.name, password : this.password};
-    //   console.log("user_details = " + user_details);
-    // }
+  
     ngAfterViewInit(): void
     {
       if (typeof document !== 'undefined')

@@ -8,7 +8,7 @@
                 <h2 class="tm-text-primary col-12">Login</h2>
                 <div class="col-lg-12 col-12 mb-5">
                     <p>
-                        If you have not created an account yet, then please <a href="#">sign up</a> first.
+                        If you have not created an account yet, then please <a [routerLink]="['/register']" routerLinkActive="router-link-active">sign up</a>  first.
                     </p>
                 </div>
                 <form id="contact-form" (ngSubmit)="onSubmit()" class="tm-contact-form mx-auto">
