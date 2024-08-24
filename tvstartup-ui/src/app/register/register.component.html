@@ -10,6 +10,11 @@
                         If you already have an account then please  <a [routerLink]="['/login']">sign in</a> first.
                     </p>
                 </div>
+                <div *ngIf="errorMessages.length > 0" class="alert alert-danger">
+                    <ul>
+                        <li *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</li>
+                    </ul>
+                </div>
                 <form id="contact-form" (ngSubmit)="onSubmit()" class="tm-contact-form mx-auto">
                     <div class="form-group">
                         <input [(ngModel)]="first_name" name="first_name" class="form-control rounded-0" placeholder="First Name" required />
@@ -26,11 +31,13 @@
                     <div class="form-group">
                         <input [(ngModel)]="password" name="password" type = "password" class="form-control rounded-0" placeholder="Password" required />
                     </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="confirm_password" name="confirm_password" type = "password" class="form-control rounded-0" placeholder="Confirm Password" required />
+                    </div>
                     <div class="form-group tm-text-right">
                         <button type="submit" class="btn btn-primary">Sign In</button>
                     </div>
-                    
-                </form>                
+                </form>
             </div>
         </div>
     </div> <!-- container-fluid, tm-container-content -->

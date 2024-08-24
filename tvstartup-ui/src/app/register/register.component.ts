@@ -21,11 +21,22 @@ export class RegisterComponent
     email: string = '';
     username: string = '';
     password: string = '';
+    confirm_password: string = '';
+    errorMessages: string[] = [];
+    passwordMismatch: boolean = false;
 
     constructor(private renderer: Renderer2, private userService: UserService, private router:Router) {}
 
     onSubmit()
     {
+        if (this.password !== this.confirm_password)
+        {
+            this.passwordMismatch = true;
+            this.errorMessages = ['Passwords do not match.!'];
+            return;
+        }
+
+        this.passwordMismatch = false;
         const userData =
         {
             first_name: this.first_name,
@@ -41,8 +52,12 @@ export class RegisterComponent
             console.log('Registration successful', response);
             this.router.navigate(['/login']);
           },
-          error: (error) => {
-            console.error('Registration failed', error);
+          error: (error) =>
+          {
+            if (error.status === 400 && error.error)
+              this.errorMessages = Object.values(error.error).flat() as string[];
+            else
+              this.errorMessages = ['An unexpected error occurred. Please try again.'];
           },
           complete: () => {
             console.log('Registration request completed');
