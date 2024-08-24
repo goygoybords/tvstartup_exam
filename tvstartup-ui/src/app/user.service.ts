@@ -10,8 +10,15 @@ export class UserService
 {
     private baseUrl = 'http://127.0.0.1:8000/account/';
     private apiUrl = "";
+    private readonly TOKEN_KEY = 'access_token';
 
     constructor(private http: HttpClient) {}
+
+    register(user: any): Observable<any>
+    {
+        this.apiUrl = "register_api";
+        return this.http.post<any>(`${this.baseUrl}${this.apiUrl}`, user);
+    }
 
     login(name: string, password: string): Observable<any>
     {
@@ -20,9 +27,23 @@ export class UserService
         return this.http.post<any>(`${this.baseUrl}${this.apiUrl}`, loginData);
     }
 
-    register(user: any): Observable<any>
+    saveToken(token: string): void
     {
-        this.apiUrl = "register_api";
-        return this.http.post<any>(`${this.baseUrl}${this.apiUrl}`, user);
+        localStorage.setItem(this.TOKEN_KEY, token);
     }
-}
+    
+    getToken(): string | null
+    {
+        return localStorage.getItem(this.TOKEN_KEY);
+    }
+    
+    isLoggedIn(): boolean
+    {
+        return this.getToken() !== null;
+    }
+    
+    logout(): void
+    {
+        localStorage.removeItem(this.TOKEN_KEY);
+    }
+  }

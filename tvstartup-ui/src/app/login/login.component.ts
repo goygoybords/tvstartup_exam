@@ -15,30 +15,37 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 })
 export class LoginComponent implements AfterViewInit
 {
-    name: string = '';
+    username: string = '';
     password: string = '';
+    errorMessages: string[] = [];
+
     constructor(private renderer: Renderer2, private userService: UserService, private router:Router) { }
 
     onSubmit()
     {
-      this.userService.login(this.name, this.password).subscribe(
-        (response) =>
+      this.userService.login(this.username, this.password).subscribe(
+      {
+        next: (response) =>
         {
-          console.log('Login successful', response);
-          this.router.navigate(['/home']);
+            console.log('Login successful', response);
+            this.userService.saveToken(response.access);
+            this.router.navigate(['/profile']);
         },
-        (error) =>
+        error: (error) =>
         {
-          console.error('Login failed', error);
+            // if (error.status === 400 && error.error)
+            //   this.errorMessages = Object.values(error.error).flat() as string[];
+            // else
+            //   this.errorMessages = ['An unexpected error occurred. Please try again.'];
+            console.error('Login failed', error);
+        },
+        complete: () =>
+        {
+            console.log('Login request completed');
         }
-      );
+      });
     }
 
-    // onSubmit()
-    // {
-    //   const user_details = { name : this.name, password : this.password};
-    //   console.log("user_details = " + user_details);
-    // }
     ngAfterViewInit(): void
     {
       if (typeof document !== 'undefined')
