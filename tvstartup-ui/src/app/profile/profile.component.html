@@ -12,19 +12,19 @@
         <div class="col-lg-5 col-md-6 col-12 mb-3">
             <img src="/assets/img/about.jpg" alt="Image" class="img-fluid">
         </div>
-        <div *ngIf="profile" class="col-lg-7 col-md-6 col-12" >
+        <div *ngIf="user" class="col-lg-7 col-md-6 col-12" >
             <div class="tm-about-img-text">
               <p class="mb-4">
-                <strong>First Name:</strong> {{ profile.first_name }}
+                <strong>First Name:</strong> {{ user.first_name }}
               </p>
               <p class="mb-4">
-                <strong>Last Name:</strong> {{ profile.last_name }}
+                <strong>Last Name:</strong>{{ user.last_name}}
               </p>
               <p class="mb-4">
-                <strong>Username:</strong> {{ profile.username }}
+                <strong>Username:</strong>  {{ user.username}}
               </p>
               <p class="mb-4">
-                <strong>Email:</strong> {{ profile.email }}
+                <strong>Email:</strong> {{ user.email}}
               </p>
               <button class="btn btn-primary mt-4">Edit Profile</button>
             </div>                

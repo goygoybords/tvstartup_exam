@@ -17,7 +17,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 })
 export class ProfileComponent implements OnInit, AfterViewInit
 {
-    profile: UserModel[] = [];
+    user: UserModel | null = null;
     videos: VideoList[] = [];
     constructor(private videoService: UserService, private renderer: Renderer2) {}
 
@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit, AfterViewInit
       {
         next: (response) =>
         {
-          this.profile = response.profile;
+          this.user = response.profile;
           this.videos = response.videos;
         },
         error: (error) =>
