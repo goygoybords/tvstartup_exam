@@ -5,12 +5,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from main.models import Video
 from .forms import RegisterForm, EditProfileForm
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializers import LoginSerializer, UserSerializer
+from rest_framework.exceptions import AuthenticationFailed
 
 
 def register_process(request):
@@ -67,13 +67,13 @@ def view_profile(request):
 def edit_profile(request, user):
     profile = get_object_or_404(User, username=user)
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=profile)  # Use the correct form class here
+        form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile has been successfully updated.')
-            return redirect('edit_profile', user=profile.username)  # Redirect to the profile page
+            return redirect('edit_profile', user=profile.username)
     else:
-        form = EditProfileForm(instance=profile)  # Use the correct form class here
+        form = EditProfileForm(instance=profile)
 
     return render(request, 'layouts/edit_profile.html', {'form': form, 'profile': profile})
 
@@ -86,17 +86,21 @@ class RegisterAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class LoginAPIView(APIView):
     def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-         # user = authenticate(request, username=username, password=password)
-        user = { "username" : username , "password" : password}
-        return Response(user)
-       
-        # if user is not None:
-        #     token, created = Token.objects.get_or_create(user=user)
-        #     return Response({'token': token.key})
-        # else:
-        #     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = User.objects.get(username=serializer.validated_data['username'])
+            
+            # Create JWT token
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "message": "Login successful",
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
+        
+        # Return errors if the credentials are not correct
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class LogoutAPIView(APIView):
     def post(self, request):
         response = Response()
