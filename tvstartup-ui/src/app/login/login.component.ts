@@ -33,11 +33,10 @@ export class LoginComponent implements AfterViewInit
         },
         error: (error) =>
         {
-            // if (error.status === 400 && error.error)
-            //   this.errorMessages = Object.values(error.error).flat() as string[];
-            // else
-            //   this.errorMessages = ['An unexpected error occurred. Please try again.'];
-            console.error('Login failed', error);
+            if (error.status === 400 && error.error)
+              this.errorMessages = Object.values(error.error).flat() as string[];
+            else
+              this.errorMessages = ['An unexpected error occurred. Please try again.'];
         },
         complete: () =>
         {

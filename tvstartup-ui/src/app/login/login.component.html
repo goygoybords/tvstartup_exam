@@ -11,6 +11,11 @@
                         If you have not created an account yet, then please <a [routerLink]="['/register']" routerLinkActive="router-link-active">sign up</a>  first.
                     </p>
                 </div>
+                <div *ngIf="errorMessages.length > 0" class="alert alert-danger">
+                    <ul>
+                        <li *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</li>
+                    </ul>
+                </div>
                 <form id="contact-form" (ngSubmit)="onSubmit()" class="tm-contact-form mx-auto">
                     <div class="form-group">
                         <input [(ngModel)]="username" name="username" class="form-control rounded-0" placeholder="Username" required />
