@@ -35,7 +35,9 @@ export class UserService
     
     getToken(): string | null
     {
-        return localStorage.getItem(this.TOKEN_KEY);
+      if (typeof localStorage !== 'undefined')
+          return localStorage.getItem(this.TOKEN_KEY);
+      return null;
     }
     
     isLoggedIn(): boolean
