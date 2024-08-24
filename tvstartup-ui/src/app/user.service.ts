@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserModel } from './user-model';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { VideoList } from './video-list';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,14 @@ export class UserService
         this.apiUrl = "login_api";
         const loginData = { username: name, password: password };
         return this.http.post<any>(`${this.baseUrl}${this.apiUrl}`, loginData);
+    }
+    
+    getVideosByLoggedInUser(): Observable<any>
+    {
+        const token = this.getToken(); // Method to retrieve the JWT token from local storage
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        this.apiUrl = "profile_api";
+        return this.http.get(`${this.baseUrl}${this.apiUrl}`, { headers });
     }
 
     saveToken(token: string): void

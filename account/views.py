@@ -11,6 +11,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializers import LoginSerializer, UserSerializer
 from rest_framework.exceptions import AuthenticationFailed
+from .serializers import ProfileSerializer
+from main.serializers import VideoSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 def register_process(request):
@@ -36,7 +39,7 @@ def login_process(request):
         password = request.POST.get("password")  
         user = authenticate(request, username=username, password=password)  
         if user is not None:  
-            login(request, user)  
+            login(request, user)
             next_url = request.POST.get('next') or request.GET.get('next') or 'home'  
             return redirect(next_url) 
         else:
@@ -107,4 +110,21 @@ class LogoutAPIView(APIView):
         response.delete_cookie('jwt')
         response.data = { 'message': 'success' }
         return response
-    
+
+class ViewProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        if request.user.is_authenticated:
+            user_id = request.user.id
+            profile = get_object_or_404(User, id=user_id)
+            videos = Video.objects.filter(uploader=request.user).order_by('-date_posted')
+
+            profile_serializer = ProfileSerializer(profile)
+            video_serializer = VideoSerializer(videos, many=True)
+
+            return Response({
+                'profile': profile_serializer.data,
+                'videos': video_serializer.data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)

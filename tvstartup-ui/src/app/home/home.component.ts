@@ -17,7 +17,6 @@ import { ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
 
 export class HomeComponent
 {
-    title = 'Home';
     videos: VideoList[] = [];
 
     constructor(private videoService: VideoService, private route: ActivatedRoute,) {}
