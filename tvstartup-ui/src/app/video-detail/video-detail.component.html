@@ -60,11 +60,12 @@
                     <img [src]="'http://127.0.0.1:8000/' + video.thumbnail" alt="{{ video.title }}" class="img-fluid">
                     <figcaption class="d-flex align-items-center justify-content-center">
                         <h2>{{ video.title }}</h2>
-                        <a href="#">View more</a>
+                        <p>{{ video.description }}</p>
+                        <a [routerLink]="['/video-detail', video.id]">View More</a>
                     </figcaption>                    
                 </figure>
                 <div class="d-flex justify-content-between tm-text-gray">
-                    <span class="tm-text-gray-light">{{ video.date_posted }}</span>
+                    <span class="tm-text-gray-light">{{ video.date_posted | date: 'MMM d, y, h:mm a' }}</span>
                 </div>
             </div>
         </div> <!-- row -->

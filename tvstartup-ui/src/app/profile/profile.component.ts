@@ -4,32 +4,41 @@ import { FooterComponent } from '../footer/footer.component';
 import { VideoService } from '../video.service';
 import { UserService } from '../user.service';
 import { VideoList } from '../video-list';
+import { UserModel } from '../user-model';
+import { CommonModule } from '@angular/common';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NavbarComponent, FooterComponent],
+  imports: [NavbarComponent, FooterComponent, CommonModule, RouterModule, RouterOutlet],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit, AfterViewInit
 {
-    profile: any;
+    profile: UserModel[] = [];
     videos: VideoList[] = [];
     constructor(private videoService: UserService, private renderer: Renderer2) {}
 
     fetchLoggedUserVideos()
     {
       this.videoService.getVideosByLoggedInUser().subscribe(
-        (response) => {
-          console.log(response);
-          // this.profile = response.profile;
-          // this.videos = response.videos;
+      {
+        next: (response) =>
+        {
+          this.profile = response.profile;
+          this.videos = response.videos;
         },
-        (error) => {
+        error: (error) =>
+        {
           console.error('Error fetching profile and videos', error);
+        },
+        complete: () =>
+        {
+          console.log('Profile and videos fetching completed');
         }
-      );
+      });
     }
 
   ngOnInit(): void
