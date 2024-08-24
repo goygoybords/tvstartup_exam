@@ -12,5 +12,7 @@ urlpatterns = [
     path('<str:user>/update', views.edit_profile, name="edit_profile"),
 
     #login api routes
+    path('register_api', views.RegisterAPIView.as_view(), name="register_api"),
     path('login_api', views.LoginAPIView.as_view(), name="login_api"),
+    path('logout_api', views.LogoutAPIView.as_view(), name="logout_api"),
 ]

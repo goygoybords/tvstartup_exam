@@ -5,5 +5,5 @@ export interface UserModel
     last_name: string;
     username: string;
     email?: string;
-    password?: string;
+    password: string;
 }

@@ -22,23 +22,32 @@ export class RegisterComponent
     username: string = '';
     password: string = '';
 
-
     constructor(private renderer: Renderer2, private userService: UserService, private router:Router) {}
 
     onSubmit()
     {
-      console.log("Register Here");
-      // this.userService.login(this.name, this.password).subscribe(
-      //   (response) =>
-      //   {
-      //     console.log('Login successful', response);
-      //     this.router.navigate(['/home']);
-      //   },
-      //   (error) =>
-      //   {
-      //     console.error('Login failed', error);
-      //   }
-      // );
+        const userData =
+        {
+            first_name: this.first_name,
+            last_name: this.last_name,
+            email: this.email,
+            username: this.username,
+            password: this.password
+        };
+
+        this.userService.register(userData).subscribe(
+        {
+          next: (response) => {
+            console.log('Registration successful', response);
+            this.router.navigate(['/login']);
+          },
+          error: (error) => {
+            console.error('Registration failed', error);
+          },
+          complete: () => {
+            console.log('Registration request completed');
+          }
+        });
     }
   
     ngAfterViewInit(): void
