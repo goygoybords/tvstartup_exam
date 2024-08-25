@@ -125,16 +125,18 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
     {
       if (this.newComment.trim())
       {
-          this.videoService.postComment(video_id, this.newComment).subscribe(
-              (response) =>
-              {
-                  console.log('Comment posted successfully', response);
-                  this.newComment = '';
-              },
-              (error) => {
-                  console.error('Error posting comment', error);
-              }
-          );
+          this.videoService.postComment(video_id, this.newComment).subscribe({
+            next: (response) => {
+              const newComment = response as unknown as CommentsModel;
+              this.comment_list.push(newComment);
+              console.log(newComment.comment);
+              console.log('Comment posted successfully', response);
+              this.newComment = ''; // Clear the textarea
+            },
+            error: (error) => {
+              console.error('Error posting comment', error);
+            }
+          });
       }
     }
 

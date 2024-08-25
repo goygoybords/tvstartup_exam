@@ -17,4 +17,4 @@ class CommentSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     class Meta:
         model = Comments
-        fields = ['id', 'comment', 'username']
+        fields = ['id', 'comment', 'username', 'video_id']
