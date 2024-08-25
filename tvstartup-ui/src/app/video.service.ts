@@ -48,6 +48,13 @@ export class VideoService
         return this.http.put<VideoList>(`${this.baseUrl}${this.videoEndpoint}${userId}`, videoData, { headers });
     }
 
+    uploadVideo(formData: FormData): Observable<any>
+    {
+        const headers = this.userService.declareAuthenticationHeaders();
+        this.videoEndpoint = "upload_video_api";
+        return this.http.post<Comment>(`${this.baseUrl}${this.videoEndpoint}`, formData, { headers });
+    }
+
     postComment(videoId: number, comment: string): Observable<Comment>
     {
         const headers = this.userService.declareAuthenticationHeaders();
@@ -55,6 +62,4 @@ export class VideoService
         this.videoEndpoint = "post_comment_api/";
         return this.http.post<Comment>(`${this.baseUrl}${this.videoEndpoint}${videoId}`, body, { headers });
     }
-
-
 }

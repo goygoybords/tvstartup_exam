@@ -2,7 +2,7 @@
 <div class="container mb-5">
     <div class="row justify-content-center">
         <div class="col-md-5 col-sm-12 col-xs-12">
-            <form method="POST" enctype="multipart/form-data">
+            <form enctype="multipart/form-data">
                 <legend class="border-bottom mb-4">Upload Video</legend>
                 <div id="drop-area" class="drop-area"
                      (dragover)="onDragOver($event)"
@@ -24,7 +24,7 @@
                     <h3>Video Details</h3>
                     <div id="videoForms"></div>
                 </div>
-                <button id="submit-button" style="display: none;" class="btn btn-primary mt-4" type="submit">Submit</button>
+                <button id="submit-button" style="display: none;" (click) = "submitVideos()" class="btn btn-primary mt-4" type="submit">Submit</button>
             </form>
         </div>
     </div>

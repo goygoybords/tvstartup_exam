@@ -206,13 +206,28 @@ class UploadVideoAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, request, video_id):
-        video = Video.objects.get(id=video_id)
-        user = request.user
+    def post(self, request, *args, **kwargs):
+        titles = request.data.getlist('title')
+        descriptions = request.data.getlist('description')
+        video_files = request.FILES.getlist('video_file')
+        thumbnails = request.FILES.getlist('thumbnail')
 
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=user, video=video)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not (titles and descriptions and video_files and thumbnails):
+            return Response({"detail": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        video_objects = []
+        for i in range(len(titles)):
+            data = {
+                'title': titles[i],
+                'description': descriptions[i],
+                'video_file': video_files[i],
+                'thumbnail': thumbnails[i]
+            }
+            serializer = VideoSerializer(data=data)
+            if serializer.is_valid():
+                video = serializer.save(uploader=request.user)  # Assign the uploader here
+                video_objects.append(video)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"detail": "Videos uploaded successfully"}, status=status.HTTP_201_CREATED)
