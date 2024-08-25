@@ -10,7 +10,7 @@ from django.http import JsonResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import VideoSerializer, UpdateVideoSerializer
+from .serializers import VideoSerializer, UpdateVideoSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -129,8 +129,14 @@ class VideoListAPIView(APIView):
 class ViewVideoAPIView(APIView):
     def get(self, request, video_id):
         video = get_object_or_404(Video, id=video_id)
-        serializer = VideoSerializer(video)
-        return Response(serializer.data)
+        comments = Comments.objects.filter(video=video).order_by('-created_on')
+        comment_serializer = CommentSerializer(comments, many=True)
+        video_serializer = VideoSerializer(video)
+
+        return Response({
+            'videos': video_serializer.data,
+            'comments': comment_serializer.data
+        }, status=status.HTTP_200_OK)
 class SearchVideoAPIView(APIView):
     def get(self, request):
         videos = None
@@ -159,12 +165,12 @@ class UpdateVideoAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteVideoAPIView(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
-    def delete(self, request, video_id):
+    def post(self, request, video_id):
         video = get_object_or_404(Video, id=video_id)
-        return Response({video}) 
+        return Response({"video"}) 
         # try:
         #     video = get_object_or_404(Video, id=video_id)
         #     if video.uploader == request.user:

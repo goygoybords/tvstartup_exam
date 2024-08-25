@@ -21,10 +21,10 @@ export class VideoService
         return this.http.get<VideoList[]>(this.baseUrl + this.videoEndpoint);
     }
 
-    getVideoById(id: number): Observable<VideoList>
+    getVideoById(id: number): Observable<any>
     {
         this.videoEndpoint = "view_video_api/";
-        return this.http.get<VideoList>(`${this.baseUrl}${this.videoEndpoint}${id}`);
+        return this.http.get<any>(`${this.baseUrl}${this.videoEndpoint}${id}`);
     }
 
     searchVideos(query: string): Observable<VideoList[]>
@@ -33,11 +33,11 @@ export class VideoService
         return this.http.get<VideoList[]>(`${this.baseUrl}${this.videoEndpoint}?search=${query}`);
     }
 
-    deleteVideo(videoId: number): Observable<any>
+    deleteVideo(videoId: number, videoData: VideoList): Observable<any>
     {
         this.videoEndpoint = "delete_video_api/";
         const headers = this.userService.declareAuthenticationHeaders();
-        return this.http.post(`${this.baseUrl}${this.videoEndpoint}${videoId}`, {headers});
+        return this.http.post(`${this.baseUrl}${this.videoEndpoint}${videoId}`, videoData, {headers});
     }
 
     updateVideo(userId: number, videoData: VideoList): Observable<VideoList>

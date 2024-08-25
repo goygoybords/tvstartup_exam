@@ -9,6 +9,7 @@ import { VideoService } from "../video.service"
 import { VideoList } from '../video-list';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommentsModel } from '../comments-model';
 
 @Component({
   selector: 'app-video-detail',
@@ -22,6 +23,7 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
     private videoId: number | null = null;
     video: VideoList | null = null;
     video_list: VideoList[] = [];
+    comment_list: CommentsModel[] = [];
     isEditing: boolean = false;
     description: string = '';
     title: string = '';
@@ -61,9 +63,11 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
   
     private fetchVideoById(videoId: number): void
     {
-        this.videoService.getVideoById(videoId).subscribe(data =>
+        this.videoService.getVideoById(videoId).subscribe(
+        data =>
         {
-          this.video = data;
+            this.video = data.videos;
+            this.comment_list = data.comments
         });
     }
 
@@ -95,9 +99,9 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
       }
     }
 
-    deleteVideo(videoId: number)
+    deleteVideo(videoId: number, video: VideoList)
     {
-      this.videoService.deleteVideo(videoId).subscribe(
+      this.videoService.deleteVideo(videoId, video).subscribe(
       {
         next: (response) =>
         {
