@@ -29,6 +29,7 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
     title: string = '';
     newComment: string = '';
     isLoggedIn: boolean = true;
+    isConfirmDeleteVisible: boolean = false;
     
     constructor(private route: ActivatedRoute, private videoService: VideoService, private router: Router) {}
 
@@ -106,6 +107,7 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         next: (response) =>
         {
             console.log('Video deleted successfully', response);
+            this.router.navigate(['/profile']);
         },
         error: (error) =>
         {
