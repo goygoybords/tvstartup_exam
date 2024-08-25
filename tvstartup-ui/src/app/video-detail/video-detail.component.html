@@ -44,13 +44,11 @@
                                 <hr>
                             </div>
 
-                            <!-- Add a comment (if logged in) -->
-                            <div *ngIf="isLoggedIn; else loginPrompt">
+                            <div *ngIf="isLoggedIn(); else loginPrompt">
                                 <textarea [(ngModel)]="newComment" class="form-control mb-2" placeholder="Add your comment" rows="3"></textarea>
-                                <button (click)="postComment()" class="btn btn-primary mb-4">Post Comment</button>
+                                <button (click)="postComment(video.id)" class="btn btn-primary mb-4">Post Comment</button>
                             </div>
 
-                            <!-- Prompt to login if not logged in -->
                             <ng-template #loginPrompt>
                                 <p class="tm-text-gray-dark">Please <a [routerLink]="['/login']">sign in</a> to comment.</p>
                             </ng-template>

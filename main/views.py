@@ -186,3 +186,18 @@ class DeleteVideoAPIView(APIView):
         
         except Exception as e:
             return Response({"message": "An error occurred", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class PostCommentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request, video_id):
+        video = Video.objects.get(id=video_id)
+        user = request.user
+
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user, video=video)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

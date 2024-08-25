@@ -10,6 +10,7 @@ import { VideoList } from '../video-list';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommentsModel } from '../comments-model';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-video-detail',
@@ -28,10 +29,9 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
     description: string = '';
     title: string = '';
     newComment: string = '';
-    isLoggedIn: boolean = true;
     isConfirmDeleteVisible: boolean = false;
     
-    constructor(private route: ActivatedRoute, private videoService: VideoService, private router: Router) {}
+    constructor(private route: ActivatedRoute, private videoService: VideoService, private router: Router, private userService:UserService) {}
 
     ngOnInit(): void
     {
@@ -39,7 +39,7 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         this.displaySpecificVideo();
     }
 
-    private displayMoreVideos()
+    displayMoreVideos()
     {
         this.videoService.getVideos().subscribe((data: VideoList[]) =>
         {
@@ -47,7 +47,7 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         });
     }
 
-    private displaySpecificVideo(): void
+    displaySpecificVideo(): void
     {
         this.route.paramMap.subscribe(params => 
         {
@@ -57,12 +57,12 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         });
     }
 
-    private getVideoIdFromParams(idParam: string | null): number | null 
+    getVideoIdFromParams(idParam: string | null): number | null 
     {
         return idParam ? Number(idParam) : null;
     }
   
-    private fetchVideoById(videoId: number): void
+    fetchVideoById(videoId: number): void
     {
         this.videoService.getVideoById(videoId).subscribe(
         data =>
@@ -116,9 +116,26 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
       });
     }
 
-    postComment()
+    isLoggedIn(): boolean
     {
-      console.log("post comment");
+        return this.userService.isLoggedIn();
+    }
+
+    postComment(video_id: number)
+    {
+      if (this.newComment.trim())
+      {
+          this.videoService.postComment(video_id, this.newComment).subscribe(
+              (response) =>
+              {
+                  console.log('Comment posted successfully', response);
+                  this.newComment = '';
+              },
+              (error) => {
+                  console.error('Error posting comment', error);
+              }
+          );
+      }
     }
 
     ngAfterViewInit()

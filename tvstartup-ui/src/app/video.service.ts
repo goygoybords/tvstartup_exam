@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { VideoList } from './video-list';
 import { UserService } from './user.service';
+import { CommentsModel } from './comments-model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,4 +47,14 @@ export class VideoService
         this.videoEndpoint = "update_video_api/";
         return this.http.put<VideoList>(`${this.baseUrl}${this.videoEndpoint}${userId}`, videoData, { headers });
     }
+
+    postComment(videoId: number, comment: string): Observable<Comment>
+    {
+        const headers = this.userService.declareAuthenticationHeaders();
+        const body = { comment };
+        this.videoEndpoint = "post_comment_api/";
+        return this.http.post<Comment>(`${this.baseUrl}${this.videoEndpoint}${videoId}`, body, { headers });
+    }
+
+
 }

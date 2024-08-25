@@ -17,5 +17,6 @@ urlpatterns = [
 
     path('update_video_api/<int:video_id>', views.UpdateVideoAPIView.as_view(), name='update_video_api'),
     path('delete_video_api/<int:video_id>', views.DeleteVideoAPIView.as_view(), name='delete_video_api'),
+    path('post_comment_api/<int:video_id>', views.PostCommentAPIView.as_view(), name='post_comment_api'),
     
 ]
