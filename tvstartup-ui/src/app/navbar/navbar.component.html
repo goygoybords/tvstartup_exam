@@ -39,7 +39,10 @@
                             <a [routerLink]="['/profile']" class="dropdown-item">View Profile</a>
                         </li>
                         <li>
-                            <a (click)="logout()" class="dropdown-item" style="cursor: pointer;">Logout</a>
+                            <a [routerLink]="['/video-upload']" class="dropdown-item">Upload Videos</a>
+                        </li>
+                        <li>
+                            <a (click)="logout()" class="dropdown-item">Logout</a>
                         </li>
                     </ul>
                 </li>

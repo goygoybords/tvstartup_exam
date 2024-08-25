@@ -1,0 +1,72 @@
+/* General styles for the navbar */
+.navbar {
+    padding: 10px 15px;
+}
+
+/* Dropdown menu styles */
+.navbar .dropdown-menu {
+    background-color: #ffffff; /* Ensure a consistent background */
+    border: 1px solid #ddd; /* Border around the dropdown */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    min-width: 160px; /* Ensure dropdown is wide enough */
+}
+
+/* Dropdown items */
+.navbar .dropdown-item {
+    padding: 8px 16px; /* Space around the text */
+    color: #333; /* Darker text for readability */
+    font-size: 14px; /* Consistent font size */
+}
+
+/* Hover and active states */
+.navbar .dropdown-item:hover, .navbar .dropdown-item:focus {
+    background-color: #2cacac; /* Background on hover */
+    color: #ffffff; /* White text on hover */
+}
+
+/* Dropdown toggle alignment */
+.navbar .dropdown-toggle::after {
+    margin-left: 0.25rem;
+    vertical-align: 0.1rem; /* Ensure proper alignment of the caret */
+}
+
+/* Make sure dropdown doesn't affect navbar height */
+.navbar .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Position directly below the parent */
+    left: auto; /* Align dropdown correctly */
+    right: 0; /* Ensure it's aligned to the right edge */
+    transform: translateY(0); /* No vertical movement */
+}
+
+/* Close button fixes in case dropdown is expanded */
+.navbar-toggler {
+    margin-left: auto;
+}
+
+.navbar-collapse {
+    justify-content: flex-end;
+}
+
+.nav-item .nav-link {
+    margin-right: 20px;
+}
+
+/* Ensure dropdown does not expand navbar height */
+.navbar .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: auto;
+    right: 0;
+    transform: translateY(0);
+}
+
+/* Fixing the issue of unnecessary height expansion */
+.navbar .dropdown-menu.show {
+    display: block;
+    padding: 0;
+    margin: 0;
+}

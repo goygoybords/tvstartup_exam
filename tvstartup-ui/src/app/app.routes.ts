@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { authGuard } from './auth.guard';
+import { UploadVideoComponent } from './upload-video/upload-video.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,6 +17,7 @@ export const routes: Routes = [
 
   //Video Routes
   { path: 'video-detail/:id', component: VideoDetailComponent },
+  { path: 'video-upload', component: UploadVideoComponent },
 
   //Account User Routes
   { path: 'login', component: LoginComponent },
