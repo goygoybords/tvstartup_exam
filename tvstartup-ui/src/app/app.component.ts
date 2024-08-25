@@ -3,6 +3,8 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { HomeComponent } from "./home/home.component";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { FooterComponent } from "./footer/footer.component";
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { userAccountInterceptor } from './user-account.interceptor';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,14 @@ import { FooterComponent } from "./footer/footer.component";
     FooterComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  providers: [
+  {
+      provide: HTTP_INTERCEPTORS,
+      useValue: userAccountInterceptor,
+      multi: true
+  }
+  ],
 })
 
 export class AppComponent implements OnInit

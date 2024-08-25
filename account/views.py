@@ -14,6 +14,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import ProfileSerializer
 from main.serializers import VideoSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 def register_process(request):
@@ -113,8 +115,10 @@ class LogoutAPIView(APIView):
 
 class ViewProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
     def get(self, request):
-        if request.user.is_authenticated:
+        try:
             user_id = request.user.id
             profile = get_object_or_404(User, id=user_id)
             videos = Video.objects.filter(uploader=request.user).order_by('-date_posted')
@@ -126,11 +130,19 @@ class ViewProfileAPIView(APIView):
                 'profile': profile_serializer.data,
                 'videos': video_serializer.data
             }, status=status.HTTP_200_OK)
-        else:
-            return Response({"message": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        except InvalidToken as e:
+            return Response({"message": "Invalid token", "details": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        except TokenError as e:
+            return Response({"message": "Token error", "details": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        except Exception as e:
+            return Response({"message": "An error occurred", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     def put(self, request, *args, **kwargs):
         user = request.user
         serializer = UpdateProfileSerializer(user, data=request.data, partial=True)
