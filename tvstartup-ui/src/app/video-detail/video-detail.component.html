@@ -14,39 +14,47 @@
                 </div>
                 <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
                     <div class="tm-bg-gray tm-video-details">
-                        <p class="mb-4">
-                            {{ video.description }}
-                        </p>
-                        <div class="text-center mb-5">
-                            <a href="#" class="btn btn-primary tm-btn-big">Download</a>
-                        </div>                    
-                        <div class="mb-4 d-flex flex-wrap">
-                            <div class="mr-4 mb-2">
-                                <span class="tm-text-gray-dark">Resolution: </span><span class="tm-text-primary">1920x1080</span>
-                            </div>
-                            <div class="mr-4 mb-2">
-                                <span class="tm-text-gray-dark">Format: </span><span class="tm-text-primary">MP4</span>
-                            </div>
-                            <div>
-                                <span class="tm-text-gray-dark">Duration: </span><span class="tm-text-primary">00:00:20</span>
-                            </div>
-                        </div>
+                        <!-- Description -->
                         <div class="mb-4">
-                            <h3 class="tm-text-gray-dark mb-3">License</h3>
-                            <p>Free for both personal and commercial use. No need to pay anything. No need to make any attribution.</p>
+                            <strong>Description:</strong>
+                            <p *ngIf="!isEditing">{{ video.description }}</p>
+                            <textarea *ngIf="isEditing" [(ngModel)]="video.description" name = "description" class="form-control" rows="3"></textarea>
                         </div>
-                        <div>
-                            <h3 class="tm-text-gray-dark mb-3">Tags</h3>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Cloud</a>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Bluesky</a>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Nature</a>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Background</a>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Timelapse</a>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Night</a>
-                            <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Real Estate</a>
+                
+                        <!-- Edit Video Button -->
+                        <div class="mb-4 text-center">
+                            <button *ngIf="!isEditing" (click)="toggleEditMode()" class="btn btn-secondary">Edit Video</button>
+                            <button *ngIf="!isEditing" (click)="deleteVideo()" class="btn btn-danger">Delete Video</button>
+                            <button *ngIf="isEditing" (click)="saveVideo()" class="btn btn-primary">Save</button>
                         </div>
-                    </div>
+                
+                       <!-- Comment Section -->
+                        <div class="mb-4">
+                            <h3 class="tm-text-gray-dark mb-3">Comments</h3>
+                            
+                            <!-- Display comments -->
+                            <div  class="mb-4">
+                            <!-- <div *ngFor="let comment of comments" class="mb-4"> -->
+                                <strong>comment.user </strong>
+                                <p>comment.text </p>
+                                <span class="tm-text-gray-dark">yy-mm-dd</span>
+                                <hr>
+                            </div>
+
+                            <!-- Add a comment (if logged in) -->
+                            <div *ngIf="isLoggedIn; else loginPrompt">
+                                <textarea [(ngModel)]="newComment" class="form-control mb-2" placeholder="Add your comment" rows="3"></textarea>
+                                <button (click)="postComment()" class="btn btn-primary mb-4">Post Comment</button>
+                            </div>
+
+                            <!-- Prompt to login if not logged in -->
+                            <ng-template #loginPrompt>
+                                <p class="tm-text-gray-dark">Please <a [routerLink]="['/login']">sign in</a> to comment.</p>
+                            </ng-template>
+                        </div>
+
                 </div>
+                
             </div>
         </div>
         <div class="row mb-4">
@@ -61,7 +69,7 @@
                     <figcaption class="d-flex align-items-center justify-content-center">
                         <h2>{{ video.title }}</h2>
                         <p>{{ video.description }}</p>
-                        <a [routerLink]="['/video-detail', video.id]">View More</a>
+                        <a (click)="navigateToDetail(video.id)">View More</a>
                     </figcaption>                    
                 </figure>
                 <div class="d-flex justify-content-between tm-text-gray">

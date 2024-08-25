@@ -8,11 +8,12 @@ import { ActivatedRoute } from '@angular/router';
 import { VideoService } from "../video.service"
 import { VideoList } from '../video-list';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-video-detail',
   standalone: true,
-  imports: [NavbarComponent, FooterComponent, RouterOutlet, RouterModule, CommonModule],
+  imports: [NavbarComponent, FooterComponent, RouterOutlet, RouterModule, CommonModule, FormsModule],
   templateUrl: './video-detail.component.html',
   styleUrl: './video-detail.component.css'
 })
@@ -21,7 +22,11 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
     private videoId: number | null = null;
     video: VideoList | null = null;
     video_list: VideoList[] = [];
-
+    isEditing: boolean = false;
+    description: string = '';
+    newComment: string = '';
+    isLoggedIn: boolean = true;
+    
     constructor(private route: ActivatedRoute, private videoService: VideoService) {}
 
     ngOnInit(): void
@@ -59,6 +64,38 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         {
           this.video = data;
         });
+    }
+
+    navigateToDetail(id: number)
+    {
+      window.location.href = `/video-detail/${id}`;
+    }
+    
+    toggleEditMode() {
+      this.isEditing = !this.isEditing;
+    }
+  
+    saveVideo()
+    {
+      console.log("save video");
+      // this.videoService.updateVideo(this.video).subscribe(
+      //   response => {
+      //     console.log('Video updated successfully', response);
+      //     this.isEditing = false;
+      //   },
+      //   error => {
+      //     console.error('Error updating video', error);
+      //   }
+      // );
+    }
+    
+    deleteVideo()
+    {
+      console.log("delete video");
+    }
+    postComment()
+    {
+      console.log("post comment");
     }
 
     ngAfterViewInit()
