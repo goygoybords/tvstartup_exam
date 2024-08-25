@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-sm-12 col-xs-12">
+            <form method="POST" enctype="multipart/form-data">
+                <legend class="border-bottom mb-4">Upload Video</legend>
+                <div id="drop-area" class="drop-area"
+                     (dragover)="onDragOver($event)"
+                     (dragleave)="onDragLeave($event)"
+                     (drop)="onDrop($event)">
+                    <div>Drag and drop your videos here</div>
+                    <div>or</div>
+                    <div>
+                        <input type="file" id="id_video_file" multiple accept="video/*"
+                               name="video_file" (change)="onFilesSelected($event)" style="display:none">
+                        <label class="btn btn-outline-info mt-3" for="id_video_file" id="fileSelect">Click here to select files</label>
+                    </div>
+                </div>
+                <div id="file-list">
+                  <p>No videos uploaded yet</p>
+                </div>
+                <button class="btn btn-primary mt-4" id="continueBtn" (click)="showVideoDetailsForm()" style="display: none;">Continue</button>
+                <div id="videoDetails" style="display: none;">
+                    <h3>Video Details</h3>
+                    <div id="videoForms"></div>
+                </div>
+                <button id="submit-button" style="display: none;" class="btn btn-primary mt-4" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

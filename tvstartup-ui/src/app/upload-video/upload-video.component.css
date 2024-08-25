@@ -1,0 +1,15 @@
+#drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .highlight {
+    border-color: green;
+  }
+  
+  .form-container {
+    margin-bottom: 20px;
+  }
+  

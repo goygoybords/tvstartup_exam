@@ -20,15 +20,16 @@ export const userAccountInterceptor: HttpInterceptorFn = (req: HttpRequest<any>,
       });
   }
 
-  // Handle the request and catch errors
   return next(req).pipe
   (
       catchError((error: HttpErrorResponse) =>
       {
         if (error.status === 401)
         {
+          console.log("User Interceptor called");
           userService.logout();
           router.navigate(['/login']);
+          location.reload();
         }
         return throwError(() => error);
       })
