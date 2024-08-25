@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializers import LoginSerializer, UserSerializer, UpdateProfileSerializer
-from rest_framework.exceptions import AuthenticationFailed
 from .serializers import ProfileSerializer
 from main.serializers import VideoSerializer
 from rest_framework.permissions import IsAuthenticated

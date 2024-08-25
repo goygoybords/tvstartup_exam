@@ -6,3 +6,9 @@ class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = ['id', 'title', 'description', 'video_file', 'thumbnail', 'date_posted', 'uploader_username']
+
+
+class UpdateVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ['title', 'description']

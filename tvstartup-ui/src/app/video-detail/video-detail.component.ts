@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { FooterComponent } from "../footer/footer.component";
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AfterViewInit } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -24,10 +24,11 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
     video_list: VideoList[] = [];
     isEditing: boolean = false;
     description: string = '';
+    title: string = '';
     newComment: string = '';
     isLoggedIn: boolean = true;
     
-    constructor(private route: ActivatedRoute, private videoService: VideoService) {}
+    constructor(private route: ActivatedRoute, private videoService: VideoService, private router: Router) {}
 
     ngOnInit(): void
     {
@@ -71,28 +72,44 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
       window.location.href = `/video-detail/${id}`;
     }
     
-    toggleEditMode() {
+    toggleEditMode()
+    {
       this.isEditing = !this.isEditing;
     }
-  
-    saveVideo()
+
+    updateVideo(id: number, video: VideoList): void
     {
-      console.log("save video");
-      // this.videoService.updateVideo(this.video).subscribe(
-      //   response => {
-      //     console.log('Video updated successfully', response);
-      //     this.isEditing = false;
-      //   },
-      //   error => {
-      //     console.error('Error updating video', error);
-      //   }
-      // );
+      if (id)
+      {
+        this.videoService.updateVideo(id,video).subscribe(
+        {
+          next: (response) =>
+          {
+            console.log('Video updated successfully', response);
+            this.isEditing = false;
+          },
+          error: (error) => {
+            console.error('Error updating video', error);
+          }
+        });
+      }
     }
-    
-    deleteVideo()
+
+    deleteVideo(videoId: number)
     {
-      console.log("delete video");
+      this.videoService.deleteVideo(videoId).subscribe(
+      {
+        next: (response) =>
+        {
+            console.log('Video deleted successfully', response);
+        },
+        error: (error) =>
+        {
+            console.error('Error deleting video', error);
+        }
+      });
     }
+
     postComment()
     {
       console.log("post comment");

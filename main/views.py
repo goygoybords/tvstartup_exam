@@ -10,7 +10,12 @@ from django.http import JsonResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import VideoSerializer
+from .serializers import VideoSerializer, UpdateVideoSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import status
 
 # Create your views here.
 def index(request):
@@ -141,3 +146,38 @@ class SearchVideoAPIView(APIView):
 
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
+
+class UpdateVideoAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    def put(self, request, video_id):
+        video = get_object_or_404(Video, id=video_id, uploader=request.user)
+        serializer = UpdateVideoSerializer(video, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteVideoAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+
+    def delete(self, request, video_id):
+        video = get_object_or_404(Video, id=video_id)
+        return Response({video}) 
+        # try:
+        #     video = get_object_or_404(Video, id=video_id)
+        #     if video.uploader == request.user:
+        #         video.delete()
+        #         return Response({"message": "Video deleted successfully"}, status=status.HTTP_200_OK)
+        #     else:
+        #         return Response({"message": "You do not have permission to delete this video"}, status=status.HTTP_403_FORBIDDEN)
+
+        # except InvalidToken as e:
+        #     return Response({"message": "Invalid token", "details": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # except TokenError as e:
+        #     return Response({"message": "Token error", "details": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # except Exception as e:
+        #     return Response({"message": "An error occurred", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
