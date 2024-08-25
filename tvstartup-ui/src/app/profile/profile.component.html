@@ -12,22 +12,37 @@
         <div class="col-lg-5 col-md-6 col-12 mb-3">
             <img src="/assets/img/about.jpg" alt="Image" class="img-fluid">
         </div>
-        <div *ngIf="user" class="col-lg-7 col-md-6 col-12" >
+        <div class="col-lg-7 col-md-6 col-12" *ngIf="user">
             <div class="tm-about-img-text">
-              <p class="mb-4">
-                <strong>First Name:</strong> {{ user.first_name }}
-              </p>
-              <p class="mb-4">
-                <strong>Last Name:</strong>{{ user.last_name}}
-              </p>
-              <p class="mb-4">
-                <strong>Username:</strong>  {{ user.username}}
-              </p>
-              <p class="mb-4">
-                <strong>Email:</strong> {{ user.email}}
-              </p>
-              <button class="btn btn-primary mt-4">Edit Profile</button>
-            </div>                
+                <div *ngIf="errorMessages.length > 0" class="mb-4 alert alert-danger">
+                    <ul>
+                        <li *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</li>
+                    </ul>
+                </div>
+                <div class="mb-4">
+                    <strong>First Name:</strong>
+                    <span *ngIf="!isEditing">{{ user.first_name }}</span>
+                    <input *ngIf="isEditing" [(ngModel)]="user.first_name" class="form-control"/>
+                </div>
+              <div class="mb-4">
+                <strong>Last Name:</strong>
+                <span *ngIf="!isEditing">{{ user.last_name }}</span>
+                <input *ngIf="isEditing" [(ngModel)]="user.last_name" class="form-control"/>
+              </div>
+              <div class="mb-4">
+                <strong>Username:</strong>
+                <span *ngIf="!isEditing">{{ user.username }}</span>
+                <input *ngIf="isEditing" [(ngModel)]="user.username" class="form-control"/>
+              </div>
+              <div class="mb-4">
+                <strong>Email:</strong>
+                <span *ngIf="!isEditing">{{ user.email }}</span>
+                <input *ngIf="isEditing" [(ngModel)]="user.email" class="form-control"/>
+              </div>
+              <button class="btn btn-primary mt-4" (click)="toggleEditMode()">
+                {{ isEditing ? 'Save' : 'Edit Profile' }}
+              </button>
+            </div>
         </div>
     </div>
     <div class="row mb-4">

@@ -31,8 +31,7 @@ export class UserService
     
     getVideosByLoggedInUser(): Observable<any>
     {
-        const token = this.getToken(); // Method to retrieve the JWT token from local storage
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const headers = this.declareAuthenticationHeaders();
         this.apiUrl = "profile_api";
         return this.http.get(`${this.baseUrl}${this.apiUrl}`, { headers });
     }
@@ -47,6 +46,12 @@ export class UserService
       if (typeof localStorage !== 'undefined')
           return localStorage.getItem(this.TOKEN_KEY);
       return null;
+    }
+
+    declareAuthenticationHeaders(): HttpHeaders
+    {
+        const token = this.getToken();
+        return new HttpHeaders().set('Authorization', `Bearer ${token}`);
     }
     
     isLoggedIn(): boolean
@@ -63,5 +68,12 @@ export class UserService
     getTokenKey(): string
     {
         return this.TOKEN_KEY;
+    }
+
+    updateProfile(userId: number, profileData: UserModel): Observable<UserModel>
+    {
+        const headers = this.declareAuthenticationHeaders();
+        this.apiUrl = "update_profile_api/";
+        return this.http.put<UserModel>(`${this.baseUrl}${this.apiUrl}${userId}`, profileData, { headers });
     }
   }

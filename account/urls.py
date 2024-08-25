@@ -13,6 +13,7 @@ urlpatterns = [
 
     #User API Routes
     path('profile_api', views.ViewProfileAPIView.as_view(), name='profile_api'),
+    path('update_profile_api/<int:user>', views.UpdateProfileAPIView.as_view(), name='update_profile_api'),
 
     #Login API Routes
     path('register_api', views.RegisterAPIView.as_view(), name="register_api"),

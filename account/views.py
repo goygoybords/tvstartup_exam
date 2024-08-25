@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
-from .serializers import LoginSerializer, UserSerializer
+from .serializers import LoginSerializer, UserSerializer, UpdateProfileSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import ProfileSerializer
 from main.serializers import VideoSerializer
@@ -128,3 +128,15 @@ class ViewProfileAPIView(APIView):
             }, status=status.HTTP_200_OK)
         else:
             return Response({"message": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UpdateProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        serializer = UpdateProfileSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Profile updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
