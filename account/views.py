@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
-from .serializers import LoginSerializer, UserSerializer, UpdateProfileSerializer
+from .serializers import LoginSerializer, UserSerializer, UpdateProfileSerializer,UserSerializerWithProfile
 from .serializers import ProfileSerializer
 from main.serializers import VideoSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -83,8 +83,10 @@ def edit_profile(request, user):
 
 class RegisterAPIView(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        profile_pic = request.FILES.get('image')
+        serializer = UserSerializerWithProfile(data=request.data)
         if serializer.is_valid():
+            serializer.validated_data['profile_pic'] = profile_pic
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -93,16 +95,12 @@ class LoginAPIView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(username=serializer.validated_data['username'])
-            
-            # Create JWT token
             refresh = RefreshToken.for_user(user)
             return Response({
                 "message": "Login successful",
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
             }, status=status.HTTP_200_OK)
-        
-        # Return errors if the credentials are not correct
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LogoutAPIView(APIView):
@@ -122,11 +120,11 @@ class ViewProfileAPIView(APIView):
             profile = get_object_or_404(User, id=user_id)
             videos = Video.objects.filter(uploader=request.user).order_by('-date_posted')
 
-            profile_serializer = ProfileSerializer(profile)
+            user_serializer = UserSerializer(profile)
             video_serializer = VideoSerializer(videos, many=True)
 
             return Response({
-                'profile': profile_serializer.data,
+                'profile': user_serializer.data,
                 'videos': video_serializer.data
             }, status=status.HTTP_200_OK)
 
