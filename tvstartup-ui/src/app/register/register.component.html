@@ -38,7 +38,7 @@
                         <textarea [(ngModel)]="bio" name="bio" placeholder="Bio" class="form-control rounded-0"></textarea>
                     </div>
                     <div class="form-group">
-                        <input type="file" name="image" (change)="onFileChange($event)" class="form-control" />
+                        <input type="file" name="image" (change)="onFileChange($event)" class="form-control" accept=".png, .jpg, .jpeg"/>
                     </div>
                     <div class="form-group tm-text-right">
                         <button type="submit" class="btn btn-primary">Sign In</button>

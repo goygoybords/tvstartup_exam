@@ -65,16 +65,22 @@ class UserSerializerWithProfile(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
+    def validate_profile_pic(self, value):
+        # Validate that the file is of an allowed image type
+        allowed_types = ['image/png', 'image/jpeg']
+        if value and value.content_type not in allowed_types:
+            raise ValidationError("Only PNG, JPG, and JPEG files are allowed.")
+        
+        return value
+
     def create(self, validated_data):
-        # Extract and parse the profile data if it's provided
         profile_data = validated_data.pop('profile', None)
         if profile_data:
             try:
-                profile_data = json.loads(profile_data)  # Parse the JSON string
+                profile_data = json.loads(profile_data)
             except json.JSONDecodeError:
                 raise serializers.ValidationError({"profile": "Invalid JSON format in profile"})
 
-        # Create the User instance
         user = User.objects.create(
             first_name=validated_data.get('first_name'),
             last_name=validated_data.get('last_name'),
@@ -84,19 +90,17 @@ class UserSerializerWithProfile(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        # Handle the profile picture if provided
         profile_pic = validated_data.get('profile_pic', None)
+        if profile_pic:
+            self.validate_profile_pic(profile_pic)
 
-        # Create the Profile instance if profile data is provided
         if profile_data:
             Profile.objects.create(
                 user=user,
                 bio=profile_data.get('bio', ''),
-                image=profile_pic  # Save the file to the profile_pic field
+                image=profile_pic
             )
-
         return user
-
 
 class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
