@@ -14,6 +14,7 @@ urlpatterns = [
     path('video_list_api/', views.VideoListAPIView.as_view(), name='video_list_api'),
     path('view_video_api/<int:video_id>', views.ViewVideoAPIView.as_view(), name='view_video_api'),
     path('search_video_api/', views.SearchVideoAPIView.as_view(), name='search_video_api'),
+    path('related_video_list_api/<int:video_id>', views.RelatedVideoListAPIView.as_view(), name='related_video_list_api'),
 
     path('update_video_api/<int:video_id>', views.UpdateVideoAPIView.as_view(), name='update_video_api'),
     path('delete_video_api/<int:video_id>', views.DeleteVideoAPIView.as_view(), name='delete_video_api'),

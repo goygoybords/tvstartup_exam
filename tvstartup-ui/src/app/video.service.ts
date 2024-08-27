@@ -22,6 +22,12 @@ export class VideoService
         return this.http.get<VideoList[]>(this.baseUrl + this.videoEndpoint);
     }
 
+    getRelatedVideos(id: number): Observable<VideoList[]>
+    {
+        this.videoEndpoint = "related_video_list_api/";
+        return this.http.get<VideoList[]>(`${this.baseUrl}${this.videoEndpoint}${id}`);
+    }
+
     getVideoById(id: number): Observable<any>
     {
         this.videoEndpoint = "view_video_api/";
@@ -52,7 +58,7 @@ export class VideoService
     {
         const headers = this.userService.declareAuthenticationHeaders();
         this.videoEndpoint = "upload_video_api";
-        return this.http.post<Comment>(`${this.baseUrl}${this.videoEndpoint}`, formData, { headers });
+        return this.http.post<VideoList>(`${this.baseUrl}${this.videoEndpoint}`, formData, { headers });
     }
 
     postComment(videoId: number, comment: string): Observable<Comment>

@@ -41,9 +41,11 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
 
     displayMoreVideos()
     {
-        this.videoService.getVideos().subscribe((data: VideoList[]) =>
+        this.route.paramMap.subscribe(params => 
         {
-          this.video_list = data;
+          this.videoId = this.getVideoIdFromParams(params.get('id'));
+          if (this.videoId !== null)
+            this.fetchVideoById(this.videoId);
         });
     }
 
@@ -53,7 +55,7 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         {
           this.videoId = this.getVideoIdFromParams(params.get('id'));
           if (this.videoId !== null)
-            this.fetchVideoById(this.videoId);
+            this.fetchRelatedVideos(this.videoId);
         });
     }
 
@@ -69,6 +71,15 @@ export class VideoDetailComponent implements  OnInit, AfterViewInit
         {
             this.video = data.videos;
             this.comment_list = data.comments
+        });
+    }
+
+    fetchRelatedVideos(videoId: number): void
+    {
+        this.videoService.getRelatedVideos(videoId).subscribe(
+        data =>
+        {
+            this.video_list = data;
         });
     }
 
