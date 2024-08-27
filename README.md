@@ -17,13 +17,7 @@ Download or clone this project:
 	git clone https://github.com/goygoybords/tvstartup_exam.git
 
 
-To run this project via docker:
-
-	docker build -t tvstartup_exam .
-
-	docker run -p 8000:8000 tvstartup_exam
-
-access the project in this url: http://localhost:8000/ or http://127.0.0.1:8000/
+To run this project: please use the manual method for now since I have a problem with my docker code.
 
 
 
