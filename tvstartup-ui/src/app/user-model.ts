@@ -1,3 +1,7 @@
+export interface ProfileModel {
+    bio?: string;
+    image?: File;
+}
 export interface UserModel
 {
     id: number;
@@ -6,6 +10,5 @@ export interface UserModel
     username: string;
     email?: string;
     password: string;
-    bio?: string;
-    image?: string;
+    profile?: ProfileModel;
 }

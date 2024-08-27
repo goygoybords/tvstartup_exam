@@ -4,7 +4,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { VideoService } from '../video.service';
 import { UserService } from '../user.service';
 import { VideoList } from '../video-list';
-import { UserModel } from '../user-model';
+import { ProfileModel, UserModel } from '../user-model';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 export class ProfileComponent implements OnInit, AfterViewInit
 {
     user: UserModel | null = null;
+    profile : ProfileModel | null = null;
     videos: VideoList[] = [];
     isEditing: boolean = false;
 
@@ -26,6 +27,8 @@ export class ProfileComponent implements OnInit, AfterViewInit
     last_name: string = '';
     email: string = '';
     username: string = '';
+    bio: string = '';
+    selectedFile: File | null = null;
     errorMessages: string[] = [];
   
     constructor(private userService: UserService, private renderer: Renderer2, private videoService: VideoService) {}
@@ -37,6 +40,7 @@ export class ProfileComponent implements OnInit, AfterViewInit
         next: (response) =>
         {
           this.user = response.profile;
+          this.profile = response.bio;
           this.videos = response.videos;
         },
         error: (error) =>
@@ -60,6 +64,7 @@ export class ProfileComponent implements OnInit, AfterViewInit
             {
               next: (response) =>
               {
+                  this.saveProfile();
                   console.log('Profile updated successfully', response);
                   this.isEditing = false;
                   this.errorMessages = [];
@@ -77,6 +82,36 @@ export class ProfileComponent implements OnInit, AfterViewInit
       }
       else
           this.isEditing = true;
+    }
+
+    onFileSelected(event: any): void
+    {
+      if (event.target.files.length > 0)
+        this.selectedFile = event.target.files[0];
+    }
+
+    saveProfile(): void
+    {
+      const formData = new FormData();
+      if(this.profile && this.profile.bio)
+          formData.append('bio', this.profile.bio);
+      if (this.selectedFile != null)
+        formData.append('image', this.selectedFile, this.selectedFile.name);
+      
+      if(this.user)
+      {
+        this.userService.updateBio(this.user.id,formData).subscribe({
+          next: (response) => {
+            this.isEditing = false;
+            this.profile = response;
+            this.selectedFile = null;
+            window.location.reload();
+          },
+          error: (error) => {
+            this.errorMessages = ['Failed to update profile. Please try again.'];
+          }
+        });
+      }
     }
 
     ngOnInit(): void

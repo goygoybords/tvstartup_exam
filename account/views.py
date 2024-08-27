@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from main.models import Video
+from account.models import Profile
 from .forms import RegisterForm, EditProfileForm
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -116,15 +117,17 @@ class ViewProfileAPIView(APIView):
 
     def get(self, request):
         try:
-            user_id = request.user.id
-            profile = get_object_or_404(User, id=user_id)
-            videos = Video.objects.filter(uploader=request.user).order_by('-date_posted')
+            user = request.user
+            profile, created = Profile.objects.get_or_create(user=user)
+            videos = Video.objects.filter(uploader=user).order_by('-date_posted')
 
-            user_serializer = UserSerializer(profile)
+            profile_serializer = UserSerializer(user)
+            bio_serializer = ProfileSerializer(profile)
             video_serializer = VideoSerializer(videos, many=True)
 
             return Response({
-                'profile': user_serializer.data,
+                'profile': profile_serializer.data,
+                'bio': bio_serializer.data,
                 'videos': video_serializer.data
             }, status=status.HTTP_200_OK)
 
@@ -149,3 +152,18 @@ class UpdateProfileAPIView(APIView):
             return Response({"message": "Profile updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UpdateProfileBioAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        profile, created = Profile.objects.get_or_create(user=user)
+
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Profile updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

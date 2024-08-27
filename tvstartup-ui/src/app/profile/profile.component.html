@@ -10,7 +10,13 @@
     </div>
     <div class="row tm-mb-74 tm-row-1640">            
         <div class="col-lg-5 col-md-6 col-12 mb-3">
-            <img src="/assets/img/about.jpg" alt="Image" class="img-fluid">
+            <div *ngIf="profile?.image">
+                <img [src]="'http://127.0.0.1:8000/' + profile?.image" class="img-fluid">
+            </div>
+
+            <div *ngIf="!profile?.image">
+                <img [src]="'http://127.0.0.1:8000//media/uploads/profile_picture/eyeglass.jpg' + profile?.image" class="img-fluid">
+            </div>
         </div>
         <div class="col-lg-7 col-md-6 col-12" *ngIf="user">
             <div class="tm-about-img-text">
@@ -39,6 +45,18 @@
                 <span *ngIf="!isEditing">{{ user.email }}</span>
                 <input *ngIf="isEditing" [(ngModel)]="user.email" class="form-control"/>
               </div>
+              <div class="mb-4">
+                <strong>Bio:</strong>
+                <span *ngIf="!isEditing">{{ profile?.bio }}</span>
+                <textarea *ngIf="isEditing && profile" [(ngModel)]="profile.bio" class="form-control"></textarea>
+              </div>
+              <div class="mb-4" *ngIf="isEditing && profile">
+                <strong>Change Profile Pic:</strong>
+                <input type="file" name="image" (change)="onFileSelected($event)" class="form-control" accept=".png, .jpg, .jpeg"/>
+              </div>
+              <div class="form-group">
+              
+            </div>
               <button class="btn btn-primary mt-4" (click)="toggleEditMode()">
                 {{ isEditing ? 'Save' : 'Edit Profile' }}
               </button>

@@ -505,6 +505,7 @@ select.form-control { border-radius: 0; }
 select.form-control option { height: 30px; }
 
 select:not([multiple]) {
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     background-position: right 15px center;

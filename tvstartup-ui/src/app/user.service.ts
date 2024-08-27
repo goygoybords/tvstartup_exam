@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { UserModel } from './user-model';
+import { ProfileModel, UserModel } from './user-model';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { VideoList } from './video-list';
@@ -75,5 +75,12 @@ export class UserService
         const headers = this.declareAuthenticationHeaders();
         this.apiUrl = "update_profile_api/";
         return this.http.put<UserModel>(`${this.baseUrl}${this.apiUrl}${userId}`, profileData, { headers });
+    }
+
+    updateBio(userId: number, profileData: FormData): Observable<any>
+    {
+        const headers = this.declareAuthenticationHeaders();
+        this.apiUrl = "update_profile_bio_api/";
+        return this.http.put<any>(`${this.baseUrl}${this.apiUrl}${userId}`, profileData, { headers });
     }
   }

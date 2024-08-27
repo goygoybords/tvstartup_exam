@@ -45,19 +45,24 @@ class LoginSerializer(serializers.Serializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(required=False)
-    image = serializers.CharField(required=False)
+    image = serializers.ImageField(required=False)
+
     class Meta:
         model = Profile
         fields = ['bio', 'image']
-        extra_kwargs = {
-            'bio': {'required': False},
-            'image': {'required': False},
-        }
+
+    def update(self, instance, validated_data):
+        instance.bio = validated_data.get('bio', instance.bio)
+        if 'image' in validated_data:
+            instance.image = validated_data.get('image', instance.image)
+        
+        instance.save()
+        return instance
+
 
 
 class UserSerializerWithProfile(serializers.ModelSerializer):
-    profile = serializers.CharField(write_only=True, required=False)  # Expect profile as a JSON string
-
+    profile = serializers.CharField(write_only=True, required=False)
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'profile']
@@ -66,7 +71,6 @@ class UserSerializerWithProfile(serializers.ModelSerializer):
         }
 
     def validate_profile_pic(self, value):
-        # Validate that the file is of an allowed image type
         allowed_types = ['image/png', 'image/jpeg']
         if value and value.content_type not in allowed_types:
             raise ValidationError("Only PNG, JPG, and JPEG files are allowed.")
